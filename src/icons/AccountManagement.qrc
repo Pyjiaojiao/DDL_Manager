@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="/">
+    <file>AccountManagement_background.png</file>
+    <file>AccountManagement_email.png</file>
+    <file>AccountManagement_head.png</file>
+    <file>AccountManagement_lock.png</file>
+    <file>AccountManagement_modify.png</file>
+    <file>AccountManagement_phone.png</file>
+    <file>AccountManagement_wechat.png</file>
+
+  </qresource>
+</RCC>

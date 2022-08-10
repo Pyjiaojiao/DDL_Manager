@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/">
+    <file>TaskManagement_search.png</file>
+    <file>TaskManagement_next.png</file>
+    <file>TaskManagement_cardBackground.png</file>
+  </qresource>
+</RCC>
