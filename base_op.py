@@ -186,8 +186,8 @@ def debug():
                  'isDaily': False,  # bool
                  'startTime': QDateTime(1970, 1, 1, 0, 0),  # QDateTime
                  'endTime': QDateTime(2050, 1, 1, 0, 0),  # QDateTime
-                 'startDate': QDateTime(2022, 8, 15, 0, 0).date(),
-                 'endDate': QDateTime(2022, 8, 15, 0, 0).date(),
+                 'startDate': QDateTime(2022, 8, 14, 0, 0).date(),
+                 'endDate': QDateTime(2022, 8, 14, 0, 0).date(),
                  'costTime': QTime(3, 30),  # QTime
                  'type': None,  # str
                  'importance': 0,  # int:[0,4)
@@ -206,7 +206,7 @@ def debug():
                  'status': 0,  # int:[0,4)
                  'detail': "Detail Text"}  # str
     add_task("admin", task_dict=task_dict)
-    qdict = {'type': 0}
+    qdict = {}
     print("USR_ID is %s" % USR_ID)
     rcds = load_specified_subtasks(specify=qdict)
     print(rcds)

@@ -107,7 +107,7 @@ def select_a_day(day_from, day_to):
     day_from_index = bisect.bisect_left(AVAILABLE_TIMETABLE, day_from)
     day_to_index = bisect.bisect_right(AVAILABLE_TIMETABLE, day_to, lo=day_from_index)
     print("day_from_index", day_from_index, "day_to_index", day_to_index)
-    rand_day_key = random.randint(day_from_index, day_to_index - 1)
+    rand_day_key = random.randint(day_from_index, max(day_to_index - 1, 0))
     return AVAILABLE_TIMETABLE[rand_day_key]
 
 
@@ -124,7 +124,7 @@ def _get_sub_task_from_task(task, part_time: datetime.time):
 def task_part_fill(time_table, task, selected_day_key=None):
     # 选择一个可用天
     if selected_day_key is None:
-        print(DAY_FROM, task.start_date, DAY_END, task.ddl)
+        print("*******",DAY_FROM, task.start_date, DAY_END, task.ddl)
         selected_day_key = select_a_day(datetime_max(DAY_FROM, task.start_date), datetime_min(DAY_END, task.ddl))
     selected_day = TIMETABLE[selected_day_key]
     # 求应安排时间
