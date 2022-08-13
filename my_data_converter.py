@@ -58,8 +58,8 @@ def records2ongoing_tasks_dict(rcd_list) -> dict:
 
 def subtask_record_and_task_dict2subtask_dict(rcd, task_dict) -> dict:
     task_dict['date'] = date_str2QDate(rcd[0])
-    task_dict['start_time'] = datetime_str2QDateTime(rcd[1])
-    task_dict['end_time'] = datetime_str2QDateTime(rcd[2])
+    task_dict['startTime'] = datetime_str2QDateTime(rcd[1])
+    task_dict['endTime'] = datetime_str2QDateTime(rcd[2])
     return task_dict
 
 
