@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file>TaskCard_more.png</file>
+    <file>TaskCard_delete.png</file>
+  </qresource>
+</RCC>
