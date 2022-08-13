@@ -56,7 +56,6 @@ def pretreatment(task_dict):
     #     task_dict['type'] = 0
     if "date" in task_dict:
         task_dict['date'] = my_data_converter.QDate2date(task_dict['date'])
-        print()
 
 
 def add_task(usr_id: str = USR_ID, task_dict: dict = {}):
@@ -146,8 +145,6 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
     usr_id = USR_ID
     pretreatment(specify)
     print('load_specified_subtasks USR_ID is %s' % usr_id)
-    if not specify:
-        return load_all_subtasks(usr_id)
     specify_keys_4task = []
     specify_keys_4subtask = []
     for key in specify:
@@ -165,8 +162,13 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
     if specify_str_4subtask == '':
         # 无date需求，认为是在任务管理页面查询
         _update_all_ongoing_tasks_status(usr_id)
-        return my_data_converter.records2ongoing_task_dicts(
+        tasks = my_data_converter.records2ongoing_task_dicts(
             my_data_base.get_ongoing_tasks_rcds(usr_id=usr_id, specify_str=specify_str_4task))
+        for task in tasks:
+            start_time_str, end_time_str = my_data_base.get_task_startTime_and_endTime(usr_id, task['name'])
+            task['startTime'] = my_data_converter.date_str2QDateTime(start_time_str) if start_time_str else None
+            task['endTime'] = my_data_converter.date_str2QDateTime(end_time_str) if end_time_str else None
+        return tasks
     else:
         # 有date需求，认为是在日历系统查询
         _update_all_ongoing_tasks_status(usr_id)
@@ -213,7 +215,7 @@ def debug():
     re_arrange()
     rcd2 = []
     qdict2 = {'date': QDateTime(2022, 8, 13, 0, 0).date()}
-    for i in range(13,20):
+    for i in range(13, 20):
         qdict2['date'] = QDateTime(2022, 8, i, 0, 0).date()
         rcd2.append(load_specified_subtasks(specify=qdict2))
     # print(rcd2)

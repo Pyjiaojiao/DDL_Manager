@@ -13,6 +13,8 @@ import my_data_converter
 # DAY_END = DAY_FROM.addDays(31)
 # print(DAY_END.daysTo(DAY_FROM))
 
+SUBTASK_STATUS_CODE = {'not_start': 0, 'doing': 1, 'finish': 2, 'time_out': 3,
+                       'delete': 4}  # dict{op_str: int} 0 未开始 1 正在做 2 完成 3 过期 4 删除
 
 # print(DAY_FROM.date().day())
 DAY_FROM = datetime.date.today() + datetime.timedelta(days=1)  # 开始日期
@@ -22,7 +24,7 @@ DAY_END = DAY_FROM + datetime.timedelta(days=31)  # 最后日期，左闭右开
 # 提供一个迭代器, 输入 (dateTime.datetime, dateTime.datetime), 返回dateTime.datetime。左闭右开
 def date_range(start, end):
     delta_int = (end - start).days
-    print(delta_int, type(delta_int))
+    # print(delta_int, type(delta_int))
     for i in range(delta_int):
         # yield start.addDays(i)    for QDateTime
         yield start + datetime.timedelta(days=i)
@@ -61,7 +63,10 @@ def task_init(usr_id=None):
     # n = int(input())
     # print("input %d TASKS,\n format: name-time-ddl" % n)
     global TASKS
-    tasks_rcd = my_data_base.get_ongoing_tasks_rcds(usr_id)
+    # TODO: 如果数据分析的实现令ONGOING_TASKS中不存在已终结的状态，那么这行可以去掉
+    specify_str = ' where status != {finish} and status != {time_out}'.format(finish=SUBTASK_STATUS_CODE['finish'],
+                                                                              time_out=SUBTASK_STATUS_CODE['time_out'])
+    tasks_rcd = my_data_base.get_ongoing_tasks_rcds(usr_id, specify_str)
     TASKS = my_data_converter.records2ongoing_tasks(tasks_rcd)
     # for i in range(n):
     #     task_key_attrs = tuple(input().split('-'))
@@ -69,9 +74,9 @@ def task_init(usr_id=None):
     #     task = Task(*task_key_attrs)
     #     TASKS.append(task)
     task_sort(TASKS)
-    print("schedule.py line 69")
-    for task in TASKS:
-        print(task.__dict__)
+    # print("schedule.py line 69")
+    # for task in TASKS:
+    #     print(task.__dict__)
 
 
 def timetable_init():
@@ -106,7 +111,7 @@ def _init(usr_id=None):
 def select_a_day(day_from, day_to):
     day_from_index = bisect.bisect_left(AVAILABLE_TIMETABLE, day_from)
     day_to_index = bisect.bisect_right(AVAILABLE_TIMETABLE, day_to, lo=day_from_index)
-    print("day_from_index", day_from_index, "day_to_index", day_to_index)
+    # print("day_from_index", day_from_index, "day_to_index", day_to_index)
     rand_day_key = random.randint(day_from_index, max(day_to_index - 1, 0))
     return AVAILABLE_TIMETABLE[rand_day_key]
 
@@ -124,18 +129,18 @@ def _get_sub_task_from_task(task, part_time: datetime.time):
 def task_part_fill(time_table, task, selected_day_key=None):
     # 选择一个可用天
     if selected_day_key is None:
-        print("*******",DAY_FROM, task.start_date, DAY_END, task.ddl)
+        # print("*******", DAY_FROM, task.start_date, DAY_END, task.ddl)
         selected_day_key = select_a_day(datetime_max(DAY_FROM, task.start_date), datetime_min(DAY_END, task.ddl))
     selected_day = TIMETABLE[selected_day_key]
     # 求应安排时间
-    print(selected_day.available_time, type(selected_day.available_time), "type selected_day.available_time")
+    # print(selected_day.available_time, type(selected_day.available_time), "type selected_day.available_time")
     part_time = min(MAX_CONTINUOUS_WORKING_TIME, task.remaining_time.time())  # 这次安排部分 的时间
-    print("type part_time", type(part_time), part_time)
+    # print("type part_time", type(part_time), part_time)
     part_time = min(part_time, selected_day.available_time)
     # 调试用。只要其他地方没问题，这里也不会有问题。
-    global cnt
-    print("cnt: %d" % cnt)
-    cnt += 1
+    # global cnt
+    # print("cnt: %d" % cnt)
+    # cnt += 1
     # 原则上不可能，因为没有比TIME_ZERO更小的时间了
     if selected_day.available_time <= Day.TIME_ZERO.time():
         raise Exception("选到了一个无可用时间的天！")
@@ -171,7 +176,7 @@ def task_arrange(usr_id):
     # 为每一个有任务的天随机排列任务
     for key, day in TIMETABLE.items():
         day.random_shuffle()
-    print("TIMETABLE_VALUES type is ", type(TIMETABLE.values()))
+    # print("TIMETABLE_VALUES type is ", type(TIMETABLE.values()))
     Day.save_all2db(TIMETABLE.values(), usr_id)
 
 # def debug():

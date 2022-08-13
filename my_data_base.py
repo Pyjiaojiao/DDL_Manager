@@ -41,7 +41,7 @@ def _usr_id2db_filename(usr_id: str):
 
 # 注册时调用，初始化数据库
 def _init_db(usr_id):
-    print('dbname is ' + _usr_id2db_filename(usr_id))
+    # print('dbname is ' + _usr_id2db_filename(usr_id))
     conn, curs = db_start(usr_id)
     # 所有正在进行的任务 name 均不相同
     tbl_crt = '''
@@ -81,7 +81,8 @@ def del_task(usr_id, task_name):
     ret = curs.fetchall()
     # 正在进行库没有task_name, 去终结库找
     if not ret:
-        ret = curs.execute("select * from TERMINATED_TASKS where name = '{task_name}'".format(task_name=task_name)).fetchall()
+        ret = curs.execute(
+            "select * from TERMINATED_TASKS where name = '{task_name}'".format(task_name=task_name)).fetchall()
         if not ret:
             curs.execute("delete from TERMINATED_TASKS where name = '{task_name}'".format(task_name=task_name))
     else:
@@ -175,7 +176,7 @@ def get_all_ongoing_subtasks(usr_id: str) -> 'Task list':
     conn, curs = db_start(usr_id)
     for row in ongoing_task_rcd_list:
         task_name = row[0]
-        curs.execute('select * from table "{task_name}"'.format(task_name=task_name))
+        curs.execute('select * from "{task_name}"'.format(task_name=task_name))
         subtasks_rcd_list = curs.fetchall()
         subtasks_list = my_data_converter.records2subtask_list(task_dict[task_name], subtasks_rcd_list)
         ret.extend(subtasks_list)
@@ -194,7 +195,7 @@ def get_specified_subtasks(usr_id: str, specify_str_4task: str, specify_str_4sub
     for row in ongoing_task_rcd_list:
         task_name = row[0]
         tbl_slct = 'select * from {table_name}'.format(table_name=task_name) + specify_str_4subtask
-        print(tbl_slct)
+        # print(tbl_slct)
         curs.execute(tbl_slct)
         # subtasks_rcd_list = []
         for row1 in curs.fetchall():
@@ -241,7 +242,8 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
         task_estimated = my_data_converter.datetime_str2datetime(task_rcd[3])
         task_estimated -= task_timedelta
         # 直接移除任务
-        curs.execute('delete from "{task_name}" where start_time = {start_time}'.format(task_name=task_name, start_time=task_start_time))
+        curs.execute('delete from "{task_name}" where start_time = {start_time}'.format(task_name=task_name,
+                                                                                        start_time=task_start_time))
         # TODO: 根据数据分析要求，更新历史记录表
     db_end(conn, curs)
 
@@ -277,9 +279,10 @@ def _update_ongoing_task_status_logic(usr_id: str, task_name):
     status_d_int = big_task_status_E * 2 + big_task_status_F
     tbl_upd = 'update ONGOING_TASKS set status = {new_status} where name = "{task_name}"'.format(
         new_status=status_d_int, task_name=task_name)
-    print("tbl_upd", tbl_upd)
+    # print("tbl_upd", tbl_upd)
     curs.execute(tbl_upd)
     db_end(conn, curs)
+    # TODO: 把ONGOING_TASKS中已完成和已过期的任务移到TERMINATED_TASKS中，同时根据数据分析要求相应做变更
 
 
 def _is_subtask_table_empty(usr_id: str, task_name: str) -> bool:
@@ -290,7 +293,7 @@ def _is_subtask_table_empty(usr_id: str, task_name: str) -> bool:
     # 判断表是否为空
     curs.execute(f'select * from "{task_name}"')
     ret = _is_curs_empty(curs)
-    print(ret, "ret")
+    # print(ret, "ret")
     db_end(conn, curs)
     return ret
 
@@ -302,11 +305,11 @@ def update_all_ongoing_tasks_status(usr_id: str, dt_now: datetime):
     db_end(conn, curs)
     for row in big_tasks_rcds:
         task_name = row[0]
-        print("update_all_ongoing_tasks_status, task_name is ", task_name)
+        # print("update_all_ongoing_tasks_status, task_name is ", task_name)
         # 先检查子任务表是否存在和是否为空，如果不存在或为空，则跳过
         if _is_subtask_table_empty(usr_id, task_name):
             continue
-        print('UPDATE starts...')
+        # print('UPDATE starts...')
         # 先更新全部下属子任务的状态
         update_subtasks_status(usr_id, dt_now, task_name)
         # 再更新原任务的状态
@@ -317,9 +320,9 @@ def update_all_ongoing_tasks_status(usr_id: str, dt_now: datetime):
 def update_subtasks_status(usr_id: str, dt_now: datetime, task_name: str):
     conn, curs = db_start(usr_id)
     # 先检查有无可以从 未开始 -> 正在进行
-    print(
-        'select * from "{task_name}" where status = {not_start_code} and start_time <= "{dt_now}" and end_time >= "{dt_now}"'.format(
-            task_name=task_name, not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
+    # print(
+    #     'select * from "{task_name}" where status = {not_start_code} and start_time <= "{dt_now}" and end_time >= "{dt_now}"'.format(
+    #         task_name=task_name, not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
     curs.execute(
         'select * from "{task_name}" where status = {not_start_code} and start_time <= "{dt_now}" and end_time >= "{dt_now}"'.format(
             task_name=task_name, not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
@@ -378,6 +381,19 @@ def update_subtasks_status(usr_id: str, dt_now: datetime, task_name: str):
     #     else:
     #         curs.execute('update ONGOING')
     #     db_end(conn, curs)
+
+
+def get_task_startTime_and_endTime(usr_id: str, task_name: str) -> tuple:
+    conn, curs = db_start(usr_id)
+    curs.execute(
+        'create table if not exists "{task_name}"(date date, start_time datetime, end_time datetime, status int)'.format(
+            task_name=task_name))
+    ret = curs.fetchall()
+    if len(ret) == 0:
+        return None, None
+    else:
+        ret.sort(key=lambda e: e[1])
+        return ret[0][1], ret[-1][2]
 
 
 def _is_curs_empty(cursor: sqlite3.Cursor) -> bool:

@@ -8,7 +8,7 @@ from datetime import datetime, date
 from PyQt5.QtCore import QDateTime, QDate
 
 _base_datetime = datetime(1900, 1, 1)
-print(_base_datetime)
+# print(_base_datetime)
 
 
 def _record2ongoing_task(rcd) -> Task:

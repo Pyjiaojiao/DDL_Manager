@@ -39,9 +39,9 @@ class Day(object):
     @staticmethod
     def datetime_sub_time(dt: datetime.datetime, time: datetime.time) -> datetime.datetime:
         tmp_datetime = datetime.datetime.strptime(str(time), "%H:%M:%S")
-        print("dt", dt, "tmp_datetime", tmp_datetime)
+        # print("dt", dt, "tmp_datetime", tmp_datetime)
         tmp_timedelta = dt - tmp_datetime
-        print("tmp_timedelta", tmp_timedelta, "dt-timedelta", dt - tmp_timedelta)
+        # print("tmp_timedelta", tmp_timedelta, "dt-timedelta", dt - tmp_timedelta)
         return Day.TIME_ZERO + tmp_timedelta
 
     @staticmethod
@@ -72,9 +72,9 @@ class Day(object):
                     d[task.name] = []
                 # 将该subtask转为用于任务调度table的记录
                 d[task.name].append(my_data_converter.subtask2record(task, 0))  # 0 means 未开始
-        print('-' * 10)
-        print("task_arrange result before storing")
+        # print('-' * 10)
+        # print("task_arrange result before storing")
         for task_name in d:
-            print(d[task_name])
+            # print(d[task_name])
             my_data_base.save_task_schedule_list2name_table(usr_id=usr_id, task_name=task_name,
                                                             schedule_list=d[task_name])
