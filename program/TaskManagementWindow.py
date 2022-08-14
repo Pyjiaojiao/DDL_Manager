@@ -27,6 +27,7 @@ class TaskManagementWindow(QWidget):
         self.baseLayout.setContentsMargins(0, 0, 0, 0)
 
         self.deleteMode = False
+        self.feature_dict = {}
 
         self.setupUi()
 
@@ -54,7 +55,7 @@ class TaskManagementWindow(QWidget):
 
         self.SearchWidget.searchButton.clicked.connect(self.searchTask)
         self.SearchWidget.searchButton.clicked.connect(self.exitDeleteMode)
-        self.SearchWidget.searchButton.clicked.connect(self.PageWidget.exitDeleteMode)
+        self.AddAndDeleteWidget.pushButton.clicked.connect(self.exitDeleteMode)
         self.AddAndDeleteWidget.pushButton_2.clicked.connect(self.changeDeleteMode)
         self.AddAndDeleteWidget.pushButton_2.clicked.connect(self.PageWidget.changeDeleteMode)
 
@@ -65,8 +66,6 @@ class TaskManagementWindow(QWidget):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        # self.pushButton.setText(_translate("MainWindow", "添加任务"))
-        # self.pushButton_2.setText(_translate("MainWindow", "删除任务"))
 
     def changeDeleteMode(self):
         if self.deleteMode is True:
@@ -74,24 +73,26 @@ class TaskManagementWindow(QWidget):
                 f.deleteMode = False
                 f.pushButton_2.setVisible(False)
             self.deleteMode = False
-            self.AddAndDeleteWidget.pushButton_2.setText("退出删除")
+            self.AddAndDeleteWidget.pushButton_2.setText("删除任务")
         else:
             for f in self.PageWidget.TaskCardList:
                 f.deleteMode = True
                 f.pushButton_2.setVisible(True)
             self.deleteMode = True
-            self.AddAndDeleteWidget.pushButton_2.setText("删除任务")
+            self.AddAndDeleteWidget.pushButton_2.setText("退出删除")
 
     def exitDeleteMode(self):
         for f in self.PageWidget.TaskCardList:
             f.deleteMode = False
         self.deleteMode = 0
         self.AddAndDeleteWidget.pushButton_2.setText("删除任务")
+        self.PageWidget.exitDeleteMode()
 
     def searchTask(self):
-        feature_dict = self.SearchWidget.getFeatureDict()
+        self.feature_dict = self.SearchWidget.getFeatureDict()
+        print(self.feature_dict)
         from TaskInterface import taskInterface
-        taskInterface.switch7.emit(feature_dict)
+        taskInterface.switch7.emit(self.feature_dict)
 
 
 if __name__ == "__main__":

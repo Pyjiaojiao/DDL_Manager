@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QDateTime, QTime, QDate
+from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QApplication
 from DataAnalysis import myAnalysisPage1Widget, myAnalysisPage2Widget, myAnalysisPage3Widget, myAnalysisPage4Widget
@@ -249,4 +249,3 @@ if __name__ == "__main__":
     w.updateDateAnalysis(chart_dict1)
     sys.exit(app.exec_())
 
-import src.images.PageTurn_rc

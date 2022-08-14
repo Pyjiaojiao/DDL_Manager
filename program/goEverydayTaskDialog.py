@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import QApplication
 class goEverydayTaskDialog(QtWidgets.QWidget):
     def __init__(self):
         super(goEverydayTaskDialog, self).__init__()
-        self.dateTime = QtCore.QDateTime()
+        self.date = QtCore.QDate()
         self.resize(300, 120)
         #self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setupUi()
@@ -42,7 +42,7 @@ class goEverydayTaskDialog(QtWidgets.QWidget):
         self.label.setStyleSheet(("background-color: rgb(255, 255, 255);\n"
                                       "color: rgb(47, 75, 51);\n"
                                       "border-radius:6px;\n"
-                                      "border:2px solid rgba(47, 75, 51)"))
+                                      "border:2px solid rgb(47, 75, 51)"))
         self.verticalLayout.addWidget(self.label)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -61,7 +61,7 @@ class goEverydayTaskDialog(QtWidgets.QWidget):
         self.pushButton.setStyleSheet("background-color: rgb(255, 255, 255);\n"
                                       "color: rgb(47, 75, 51);\n"
                                       "border-radius:6px;\n"
-                                      "border:2px solid rgba(47, 75, 51)")
+                                      "border:2px solid rgb(47, 75, 51)")
         self.pushButton.setObjectName("取消")
         self.horizontalLayout.addWidget(self.pushButton)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -81,12 +81,12 @@ class goEverydayTaskDialog(QtWidgets.QWidget):
 
     def updateText(self, date):
         dateStr = date.toString("yyyy-MM-dd")
-        self.dateTime = date
+        self.date = date
         self.label.setText("确定查看" + dateStr + "的任务吗？")
 
     def goInputDayTask(self):
         from TaskInterface import taskInterface
-        taskInterface.switch5.emit(self.dateTime)
+        taskInterface.switch5.emit(self.date)
         return
 
 

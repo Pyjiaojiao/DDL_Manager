@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtCore import QDateTime
+from PyQt5.QtCore import QDateTime, QDate, QTime
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication
 from TaskDetailWidget import myTaskDetailWidget
@@ -9,21 +9,22 @@ from TaskInterface import taskInterface
 
 
 class myTaskCard(QtWidgets.QWidget):
-
+    switch1 = QtCore.pyqtSignal()  # finish task:taskCard->taskManage
+    switch2 = QtCore.pyqtSignal()  # finish date task:taskCard->everydayTask
 
     def __init__(self):
         super(myTaskCard, self).__init__()
         self.resize(346, 280)
         self.taskDict = {'name': None,
                          'isDaily': False,
-                         'startTime': QDateTime(1970, 1, 1, 0, 0),
-                         'endTime': QDateTime(1970, 1, 1, 0, 0),
+                         'startTime': QDate(1970, 1, 1),
+                         'endTime': QDate(1970, 1, 1),
                          'type': None,
                          'importance': 0,
                          'status': 0,
                          'detail': None}
         self.taskDetailWidget = myTaskDetailWidget()
-
+        self.pageMode = 1  # 1: 每日任务 2:任务管理
         self.setupUi()
 
     def setupUi(self):
@@ -155,12 +156,13 @@ class myTaskCard(QtWidgets.QWidget):
         font.setItalic(False)
         font.setWeight(50)
         self.pushButton_2.setFont(font)
-        self.pushButton_2.setStyleSheet("background-image: url(:/TaskCard_delete.png);\n"
-                                        "border-radius:10px;\n"
-                                        "color:rgb(255, 255, 255);\n"
-                                        "font: 11pt \"Consolas\";\n"
-                                        "\n"
-                                        "")
+        self.pushButton_2.setStyleSheet('''QPushButton {
+                                        background-image: url(:/TaskCard_delete.png);
+                                        border-radius:10px;
+                                        color:rgb(255, 255, 255);
+                                        font: 11pt \"Consolas\";}
+                            
+                                        ''')
         self.pushButton_2.setText("")
         self.pushButton_2.setObjectName("pushButton_2")
 
@@ -170,6 +172,7 @@ class myTaskCard(QtWidgets.QWidget):
         self.pushButton_2.clicked.connect(self.deleteTask)
         self.taskDetailWidget.modifyButton.clicked.connect(self.rewriteTask)
         self.taskDetailWidget.modifyButton.clicked.connect(self.taskDetailWidget.close)
+        self.checkBox.stateChanged.connect(self.finishTask)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -198,9 +201,10 @@ class myTaskCard(QtWidgets.QWidget):
             self.frame.setVisible(True)
             self.taskDict = task_dict
             self.label_4.setText(self.taskDict['name'])
-            self.label_6.setText(self.taskDict['endTime'].toString(QtCore.Qt.DefaultLocaleShortDate))
+            self.label_6.setText(self.taskDict['endDate'].toString(QtCore.Qt.DefaultLocaleShortDate))
             self.checkBox.setChecked(self.taskDict['status'] > 1)
             self.progressBar.setProperty("value", self.taskDict['status'] * 25)
+            # if self.pageMode == 1:
             self.taskDetailWidget.updateTask(task_dict)
             self.frame.setVisible(True)
 
@@ -208,17 +212,21 @@ class myTaskCard(QtWidgets.QWidget):
         self.pushButton_2.setVisible(bool)
 
     def deleteTask(self):
-        taskInterface.switch3.emit(str(self.taskDict['name']))
+        if self.pageMode == 1:
+            taskInterface.switch3_.emit(str(self.taskDict['name']), self.taskDict['startTime'])
+        elif self.pageMode == 2:
+            print("pre delete" + str(self.taskDict['name']))
+            taskInterface.switch3.emit(str(self.taskDict['name']))
         return
 
     def rewriteTask(self):
         name = self.taskDetailWidget.label_9.text()
         isDaily = self.taskDetailWidget.label_14.isChecked()
-        startTime = QtCore.QDateTime.fromString(self.taskDetailWidget.label_10.text(), "yyyy-MM-dd hh:mm")
+        startTime = QtCore.QDate.fromString(self.taskDetailWidget.label_10.text(), "yyyy-MM-dd")
         costTime = self.taskDetailWidget.timeEdit.time()
-        endTime = QtCore.QDateTime.fromString(self.taskDetailWidget.label_11.text(), "yyyy-MM-dd hh:mm")
-        taskType = self.taskDetailWidget.label_12.text()
-        importance = self.taskDetailWidget.label_13.text()
+        endTime = QtCore.QDate.fromString(self.taskDetailWidget.label_11.text(), "yyyy-MM-dd")
+        taskType = self.taskDetailWidget.comboBox.currentText()
+        importance = self.taskDetailWidget.comboBox_2.currentIndex()
         status = int(self.progressBar.property("value")) / 33
         detail = self.taskDetailWidget.textBrowser.toPlainText()
         taskDict = {'name': name,  # str
@@ -232,16 +240,28 @@ class myTaskCard(QtWidgets.QWidget):
                     'detail': detail}  # str
 
         shortTaskDict = self.checkEdit(taskDict)
-        # taskInterface.switch1.emit(shortTaskDict) # 实际使用的
-        taskInterface.switch1.emit(taskDict)  # 用于测试的，将shortTaskDict转为完整的taskDict、再并入taskList传入页面重新加载，由后端完成
+        taskInterface.switch1.emit(shortTaskDict)  # 实际使用的
+        # taskInterface.switch1.emit(taskDict)  # 用于测试的，将shortTaskDict转为完整的taskDict、再并入taskList传入页面重新加载，由后端完成
         return
 
     def checkEdit(self, task_dict):
-        shortDict = {}
+        shortDict = {'name': task_dict['name']}
         for key in self.taskDict:
-            if key in task_dict and self.taskDict[key] != task_dict[key]:
+            if key in task_dict and self.taskDict[key] != task_dict[key]\
+                    and key != 'endTime' and key != 'startTime':
                 shortDict.update({key: task_dict[key]})
         return shortDict
+
+    def finishTask(self):
+        if self.checkBox.isChecked():
+            self.taskDict['status'] = 2
+            if self.pageMode == 1:
+                date = QtCore.QDate.fromString(self.taskDict['startTime'].toString("yyyy/MM/dd"), "yyyy/MM/dd")
+                self.checkBox.setEnabled(False)
+                taskInterface.switch17.emit(date, self.taskDict)  # everyDayTask
+            elif self.pageMode == 2:
+                self.checkBox.setEnabled(False)
+                taskInterface.switch15.emit(self.taskDict)  # taskManage
 
 
 import src.images.TaskCard_rc
@@ -251,6 +271,7 @@ if __name__ == "__main__":
              'isDaily': False,
              'startTime': QDateTime(1980, 1, 1, 0, 0),
              'endTime': QDateTime(1980, 1, 1, 0, 0),
+             'costTime': QTime(0, 0),
              'type': None,
              'importance': 0,
              'status': 3,

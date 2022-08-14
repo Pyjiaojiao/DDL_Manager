@@ -29,7 +29,8 @@ class EveryDayTaskWindow(QtWidgets.QWidget):
         self.baseLayout = QtWidgets.QGridLayout(self, spacing=0)
         self.baseLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.date = QtCore.QDateTime.currentDateTime()
+        self.date = QtCore.QDate.currentDate()
+        self.feature_dict = {}
 
         self.bootTag = 0
         self.setupUi()
@@ -55,7 +56,9 @@ class EveryDayTaskWindow(QtWidgets.QWidget):
         self.layout2 = QGridLayout(self.layout2_widget, spacing=0)
         self.layout2.addWidget(self.PageWidget)
         for f in self.PageWidget.TaskCardList:
-            f.pushButton_2.setVisible(False)
+            f.pushButton_2.setVisible(True)
+            f.taskDetailWidget.setVisible(False)
+            f.pageMode = 1
         self.baseLayout.addWidget(self.layout2_widget, 1, 0, 8, 1)
 
         self.SearchWidget.searchButton.clicked.connect(self.searchTaskFromDate)
@@ -73,11 +76,12 @@ class EveryDayTaskWindow(QtWidgets.QWidget):
         _translate = QtCore.QCoreApplication.translate
 
     def searchTaskFromDate(self):
-        feature_dict = self.SearchWidget.getFeatureDict()
-        taskInterface.switch9.emit(self.date, feature_dict)
-        print(feature_dict)
+        self.feature_dict = self.SearchWidget.getFeatureDict()
 
-    def updateDate(self, date):  # date:Qtcore.QDateTime()
+        taskInterface.switch9.emit(self.date, self.feature_dict)
+        print(self.feature_dict)
+
+    def updateDate(self, date):  # date:Qtcore.QDate()
         self.date = date
         self.DateWidget.label.setText(date.toString("yyyy/MM/dd"))
 

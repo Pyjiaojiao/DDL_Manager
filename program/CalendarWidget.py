@@ -136,7 +136,7 @@ class CalendarWidget(QCalendarWidget):
         # 修改字体
         wf = QTextCharFormat()
         wf.setFont(QFont("Microsoft YaHei", 17))
-        # wf.setFontItalic(True)
+        #wf.setFontItalic(True)
         self.setWeekdayTextFormat(Qt.Monday, wf)
         self.setWeekdayTextFormat(Qt.Tuesday, wf)
         self.setWeekdayTextFormat(Qt.Wednesday, wf)
@@ -152,7 +152,7 @@ class CalendarWidget(QCalendarWidget):
 
     def goQuery(self, date):
         date = date.toString("yyyy-MM-dd")
-        datetime = QtCore.QDateTime.fromString(date, "yyyy-MM-dd")
+        datetime = QtCore.QDate.fromString(date, "yyyy-MM-dd")
         self.goEverydayTaskDialog.updateText(datetime)
         self.goEverydayTaskDialog.show()
 

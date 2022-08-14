@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QDateTime
+from PyQt5.QtCore import QDate, QDateTime, QTime
 from PyQt5.QtWidgets import QApplication
 
 
@@ -12,6 +12,7 @@ class myTaskDetailWidget(QtWidgets.QWidget):
                          'isDaily': False,
                          'startTime': QDateTime(1970, 1, 1, 0, 0),
                          'endTime': QDateTime(1970, 1, 1, 0, 0),
+                         'costTime': QTime(0, 0),
                          'type': None,
                          'importance': 0,
                          'status': 0,
@@ -188,36 +189,46 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.label_11.setObjectName("label_11")
 
         # label_12: 任务类型
-        self.label_12 = QtWidgets.QLineEdit(self.widget)
-        self.label_12.setGeometry(QtCore.QRect(180, 310, 300, 30))
+        self.comboBox = QtWidgets.QComboBox(self.widget)
+        self.comboBox.setGeometry(QtCore.QRect(180, 310, 300, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
-        self.label_12.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
+        self.comboBox.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
-        self.label_12.setFont(font)
-        self.label_12.setStyleSheet("background-color:rgb(238, 238, 238);\n"
+        self.comboBox.setFont(font)
+        self.comboBox.setStyleSheet("background-color:rgb(238, 238, 238);\n"
                                     "border-radius:5px\n"
                                     "")
-        self.label_12.setText("")
-        self.label_12.setObjectName("label_12")
+        #self.comboBox.setText("")
+        self.comboBox.setObjectName("label_12")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+
         # label_13:重要性
-        self.label_13 = QtWidgets.QLineEdit(self.widget)
-        self.label_13.setGeometry(QtCore.QRect(180, 370, 300, 30))
+        self.comboBox_2 = QtWidgets.QComboBox(self.widget)
+        self.comboBox_2.setGeometry(QtCore.QRect(180, 370, 300, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
-        self.label_13.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.comboBox_2.sizePolicy().hasHeightForWidth())
+        self.comboBox_2.setSizePolicy(sizePolicy)
         sfont = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
-        self.label_13.setFont(font)
-        self.label_13.setStyleSheet("background-color:rgb(238, 238, 238);\n"
+        self.comboBox_2.setFont(font)
+        self.comboBox_2.setStyleSheet("background-color:rgb(238, 238, 238);\n"
                                     "border-radius:5px")
-        self.label_13.setText("")
-        self.label_13.setObjectName("label_13")
+        #self.comboBox_2.setText("")
+        self.comboBox_2.setObjectName("label_13")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
         # label_14:是否为日常任务
         self.label_14 = QtWidgets.QCheckBox(self.widget)
         self.label_14.setGeometry(QtCore.QRect(200, 250, 91, 30))
@@ -251,6 +262,8 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.timeEdit.setStyleSheet("background-color:rgb(238, 238, 238);\n"
                                     "border-radius:5px\n"
                                     "")
+        font.setBold(False)
+        self.timeEdit.setFont(font)
 
         ### 返回键
         self.returnButton = QtWidgets.QPushButton(self.widget)
@@ -277,6 +290,9 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.modifyButton.setText("")
         self.modifyButton.setObjectName("modifyButton")
 
+
+        self.returnButton.clicked.connect(self.close)
+
         self.retranslateUi(self)
 
     def retranslateUi(self, MainWindow):
@@ -292,19 +308,35 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.significanceLabel.setText(_translate("MainWindow", "重要性："))
         self.detailLabel.setText(_translate("MainWindow", "详细描述："))
         self.costTimeLabel.setText(_translate("MainWindow", "预期用时："))
+        self.comboBox.setItemText(0, _translate("MainWindow", "学习"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "运动"))
+        self.comboBox.setItemText(2, _translate("MainWindow", "娱乐"))
+        self.comboBox.setItemText(3, _translate("MainWindow", "工作"))
+        self.comboBox.setItemText(4, _translate("MainWindow", "其他"))
+        self.comboBox_2.setItemText(3, _translate("MainWindow", "非常重要"))
+        self.comboBox_2.setItemText(2, _translate("MainWindow", "重要"))
+        self.comboBox_2.setItemText(1, _translate("MainWindow", "一般"))
+        self.comboBox_2.setItemText(0, _translate("MainWindow", "不重要"))
 
     def updateTask(self, task_dict):
         self.taskDict = task_dict
+        print(task_dict)
         self.label_9.setText(self.taskDict['name'])
+        print(self.taskDict['startTime'])
         self.label_10.setDateTime(self.taskDict['startTime'])
         self.label_11.setDateTime(self.taskDict['endTime'])
-        self.timeEdit.setTime(self.taskDict['costTime'])
+        if self.taskDict.__contains__('costTime'):
+            costTime = self.taskDict['costTime']
+        else:
+            costTime = QTime.fromString(self.taskDict['time_estimated'].toString("hh:mm"), "hh:mm")
+        self.timeEdit.setTime(costTime)
         if self.taskDict['isDaily'] is True:
             self.label_14.setChecked(True)
         else:
             self.label_14.setChecked(False)
-        self.label_12.setText(self.taskDict['type'])
-        self.label_13.setText(self.loadImportance(str(self.taskDict['importance'])))
+        typeList = ["学习", "工作", "运动", "娱乐", "其他"]
+        self.comboBox.setCurrentIndex(typeList.index(self.taskDict['type']))
+        self.comboBox_2.setCurrentIndex(self.taskDict['importance'])
         status = self.calStatusDegree(self.taskDict['status'])
         self.progressBar.setProperty("value", int(status))
         self.textBrowser.setText(self.taskDict['detail'])

@@ -2,25 +2,22 @@ import sys
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import QDateTime
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QWidget
 
 
-class ChartInterface():
+class ChartInterface(QWidget):
     switch1 = QtCore.pyqtSignal(dict)  # 数据分析检索：数据分析页面（检索按钮）->ChartInterface
     switch2 = QtCore.pyqtSignal(dict)  # 数据分析检索：ChartInterface->MainWindow
 
     def __init__(self):
+        super(ChartInterface, self).__init__()
         self.chart_dict = {'startDate': QDateTime(1970, 1, 1, 0, 0),  # QDateTime
                            'endDate': QDateTime(2050, 1, 1, 0, 0),  # QDateTime 指定查询的开始和截止日期（只考虑日期，不计小时分钟）
-                           # 以下字段均针对“所有时间”
-                           'totalOriginTaskCount': 0,  # int
-                           'totalTaskCount': 0,  # int 拆分任务总数+日常任务总数，其中日常任务每天均计数
-                           'totalTaskFinishRate': 0,  # float:[0,1] 总任务完成率, 针对已到截止时间的拆分任务+日常任务
                            # 以下字段均针对“指定的startDate和endDate之间”
-                           'curOriginTaskCount': 0,
-                           'curTaskCount': 0,
-                           'curFinishTaskCount':0,
-                           'curTaskFinishRate': 0,
+                           'curOriginTaskCount': 0, # int
+                           'curTaskCount': 0, # int 拆分任务总数+日常任务总数，其中日常任务每天均计数
+                           'curFinishTaskCount':0,  # int 已完成任务总数，针对已到截止时间的拆分任务+日常任务
+                           'curTaskFinishRate': 0,  # float:[0,1] 总任务完成率, 针对已到截止时间的拆分任务+日常任务
                            'timeEstimatedList': list,  # tuple(hour:int, count:int),其中hour是时间范围的上限。
                            # 例如：[(3,5),(6,10)]的含义是：预期时长为0-3时的任务有5个，3-6h的任务有10个，hour步长为3。hour的步长是均匀的，具体数值应由后端确定，保证len(list)<10即可。
                            # 这里的“预期时长”针对原始任务，日常任务只记一次。
@@ -40,6 +37,7 @@ class ChartInterface():
                            }
         self.switch1.connect(self.searchChartData)
         return
+
 
     # date_dict={startDate:QDate, endDate:QDate}
     def searchChartData(self, date_dict):

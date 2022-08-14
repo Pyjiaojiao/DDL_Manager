@@ -159,7 +159,9 @@ class mySearchWidget(QWidget):
             'isDaily': self.checkBox.isChecked()
         }
         if self.comboBox_2.currentIndex() != 0:
-            feature_dict.update({'type': self.comboBox_2.currentText()})
+            # print("now type is " + self.comboBox_2.currentIndex().__str__())
+            typeList = ["学习", "工作", "运动", "娱乐", "其他"]
+            feature_dict.update({'type': typeList[int(self.comboBox_2.currentIndex() - 1)]})
         if self.comboBox_3.currentIndex() != 0:
             feature_dict.update({'importance': self.comboBox_3.currentIndex() - 1})
         if self.comboBox.currentIndex() != 0:

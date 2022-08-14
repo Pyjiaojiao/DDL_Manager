@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QDateTime, QTime
+from PyQt5.QtCore import QDateTime, QTime, QDate
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QApplication
 
@@ -17,15 +17,15 @@ class PageWidget(QtWidgets.QWidget):
         # 当前任务列表
         task2 = {'name': "task2",
                  'isDaily': False,
-                 'startTime': QDateTime(1980, 1, 1, 0, 0),
-                 'endTime': QDateTime(1980, 1, 1, 0, 0),
+                 'startTime': QDateTime(1980, 1, 1, 1, 1),
+                 'endTime': QDateTime(1980, 1, 1, 1, 1),
                  'type': None,
                  'costTime': QTime(0, 0),
                  'importance': 0,
                  'status': 3,
                  'detail': None}
-        #self.TaskList = [task2, task2, task2, task2, task2, task2, task2, task2, task2, task2, task2, task2, task2,
-        #                 task2, task2, task2, task2, task2, task2, task2]
+        self.TaskList = [task2, task2, task2, task2, task2, task2, task2, task2, task2, task2, task2, task2, task2,
+                         task2, task2, task2, task2, task2, task2, task2]
         self.TaskList = []
         self.TaskCardList = []
         self.PageNum = (len(self.TaskList) - 1) // 6 + 1
@@ -34,7 +34,7 @@ class PageWidget(QtWidgets.QWidget):
         self.cardWidget = QtWidgets.QWidget(self)
         self.cardWidget.setGeometry(QtCore.QRect(0, 0, 1040, 570))
 
-        self.baseLayout = QtWidgets.QVBoxLayout(self,spacing=0)
+        self.baseLayout = QtWidgets.QVBoxLayout(self, spacing=0)
         self.baseLayout.setContentsMargins(0, 0, 0, 0)
         self.stackedWidget = QtWidgets.QStackedWidget(self.cardWidget)
         self.baseLayout.addWidget(self.stackedWidget)
@@ -47,6 +47,7 @@ class PageWidget(QtWidgets.QWidget):
         self.setupUi()
 
     def setupUi(self):
+
         for i in range(self.PageNum):
             layoutWidget = QtWidgets.QWidget()
             layoutWidget.setFixedSize(1040, 560)
@@ -190,6 +191,10 @@ class PageWidget(QtWidgets.QWidget):
         # 即时渲染
         self.setupUi()
 
+    def setPageMode(self, m):
+        for f in self.TaskCardList:
+            f.pageMode = m
+
     def button_clicked(self):
         button_text = self.sender().text()
         total_page = int(self.totalPage.text().split()[1])  # 总页数
@@ -244,8 +249,9 @@ import src.images.PageTurn_rc
 if __name__ == "__main__":
     task2 = {'name': "task2",
              'isDaily': False,
-             'startTime': QDateTime(1980, 1, 1, 0, 0),
-             'endTime': QDateTime(1980, 1, 1, 0, 0),
+             'startTime': QDateTime(1980, 1, 1, 1, 1),
+             'endTime': QDateTime(1980, 1, 1, 2, 1),
+             'costTime': QTime(0, 0),
              'type': None,
              'importance': 0,
              'status': 3,

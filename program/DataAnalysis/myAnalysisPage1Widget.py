@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QDate
 from Chart import pieChart
@@ -335,8 +335,6 @@ class myCardsWidget(QWidget):
         chartInterface.switch1.emit({'startDate': self.startDate,
                                      'endDate': self.endDate})
 
-
-import DataAnalysis_rc
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

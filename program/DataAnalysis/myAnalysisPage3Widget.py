@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt
 from Chart import barChart
 
@@ -45,8 +45,6 @@ class myCardsWidget(QWidget):
         self.taskTimeDistributeBarChart.initChart('taskTimeDistributeInOneDay',
                                                   chart_list)
 
-
-import DataAnalysis_rc
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
