@@ -127,8 +127,8 @@ def normal_modify(usr_id, task_name, key, new_val):
     conn, curs = db_start(usr_id)
     # if is in ONGOING_TASKS table
     curs.execute(
-        "update ONGOING_TASKS set {key}='{new_val}' where name = '{task_name}'".format(key=key, new_val=new_val,
-                                                                                       task_name=task_name))
+        "update ONGOING_TASKS set '{key}' = '{new_val}' where name = '{task_name}'".format(key=key, new_val=new_val,
+                                                                                           task_name=task_name))
     db_end(conn, curs)
 
 
