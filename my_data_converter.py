@@ -110,3 +110,7 @@ def date_str2QDateTime(d_str: 'date_str') -> QDateTime:
 
 def date_str2QDate(d_str: 'date_str') -> QDate:
     return date_str2QDateTime(d_str).date()
+
+
+def date_str2date(d_str: str) -> datetime.date:
+    return datetime.strptime(d_str, "%Y-%m-%d")

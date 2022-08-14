@@ -1,4 +1,6 @@
 import datetime
+
+import my_data_analyzer
 import my_data_base
 from hashlib import md5
 import schedule
@@ -23,10 +25,10 @@ NAME_KEY = {'name'}
 TRIVIAL_KEY = {'type', 'detail'}
 SCHEDULE_KEY = {'priority', 'time_estimated', 'start_date', 'ddl'}
 STATUS_KEY = {'status'}
-RANGE_KEY = ['start_date', 'end_date']
 
 QRY_MANAGER_KEY = {'is_daily', 'status', 'type', 'priority'}
 QRY_DATE_KEY = {'date'}
+QRY_RANGE_KEY = {'start_date', 'end_date'}
 
 SUBTASK_STATUS_CODE = {'not_start': 0, 'doing': 1, 'finish': 2, 'time_out': 3,
                        'delete': 4}  # dict{op_str: int} 0 未开始 1 正在做 2 完成 3 过期 4 删除
@@ -46,7 +48,7 @@ def pretreatment(task_dict):
         task_dict["time_estimated"] = datetime.datetime.strptime(str(hour) + ':' + str(minute),
                                                                  "%H:%M")
     if "endDate" in task_dict:
-        task_dict['ddl'] = my_data_converter.QDate2date(task_dict['endDate'])
+        task_dict['end_date'] = task_dict['ddl'] = my_data_converter.QDate2date(task_dict['endDate'])
     # if "startDate" in task_dict:
     #     task_dict["start_time"] = my_data_converter.QDateTime2datetime(task_dict["startTime"])
     #     task_dict['start_date'] = task_dict['start_time'].date()
@@ -86,7 +88,7 @@ def finish_subtask(usr_id: str = USR_ID, task_name="test", task_start_time: QDat
     usr_id = USR_ID
     my_data_base.terminate_subtask(usr_id=usr_id, task_name=task_name,
                                    task_start_time=my_data_converter.QDateTime2datetime(task_start_time),
-                                   terminate_code=2)
+                                   terminate_code=SUBTASK_STATUS_CODE['finish'])
     dt_now = datetime.datetime.now()  # type - datetime
     my_data_base.update_subtasks_status(usr_id, dt_now, task_name)
 
@@ -95,7 +97,7 @@ def delete_subtask(usr_id: str = USR_ID, task_name="test", task_start_time: QDat
     usr_id = USR_ID
     my_data_base.terminate_subtask(usr_id=usr_id, task_name=task_name,
                                    task_start_time=my_data_converter.QDateTime2datetime(task_start_time),
-                                   terminate_code=4)
+                                   terminate_code=SUBTASK_STATUS_CODE['delete'])
 
 
 def re_arrange(usr_id: str = USR_ID):
@@ -181,6 +183,11 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
 def _update_all_ongoing_tasks_status(usr_id: str):
     dt_now = datetime.datetime.now().replace(microsecond=0)  # type - datetime
     my_data_base.update_all_ongoing_tasks_status(usr_id=usr_id, dt_now=dt_now)
+
+
+def get_analyze_result(usr_id: str, specify: dict = {}) -> dict:
+    pretreatment(task_dict=specify)
+    return my_data_analyzer.get_analyze_result(usr_id, specify)
 
 
 def debug():

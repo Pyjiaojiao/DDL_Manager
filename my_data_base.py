@@ -139,7 +139,7 @@ def get_max_continuous_working_time(usr_id: str) -> datetime.time:
     return datetime.time(2, 0, 0)  # for test
 
 
-# 返回全部正在发生的任务, 返回值类型为list[Task[,...]]
+# 返回全部正在发生的任务, 返回值类型为list[Task record[,...]]
 def get_ongoing_tasks_rcds(usr_id: str, specify_str: str = '') -> 'Task records list':
     conn, curs = db_start(usr_id)
     curs.execute('select * from ONGOING_TASKS' + specify_str)
@@ -385,6 +385,7 @@ def update_subtasks_status(usr_id: str, dt_now: datetime, task_name: str):
     #     db_end(conn, curs)
 
 
+# 返回 str, str 或 None, None
 def get_task_startTime_and_endTime(usr_id: str, task_name: str) -> tuple:
     conn, curs = db_start(usr_id)
     curs.execute(
