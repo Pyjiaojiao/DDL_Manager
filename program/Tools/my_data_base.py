@@ -126,7 +126,9 @@ def rename_task(usr_id, old_name, new_name):
 def normal_modify(usr_id, task_name, key, new_val):
     conn, curs = db_start(usr_id)
     # if is in ONGOING_TASKS table
-    curs.execute("update ONGOING_TASKS set {key}='{new_val}' where name = '{task_name}'".format(key=key, new_val=new_val))
+    curs.execute(
+        "update ONGOING_TASKS set '{key}' = '{new_val}' where name = '{task_name}'".format(key=key, new_val=new_val,
+                                                                                           task_name=task_name))
     db_end(conn, curs)
 
 
@@ -212,7 +214,7 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
     conn, curs = db_start(usr_id)
     # 获取子任务持续时间
     curs.execute('select * from "{task_name}" where start_time = "{start_time}"'.format(task_name=task_name,
-                                                                                      start_time=task_start_time))
+                                                                                        start_time=task_start_time))
     subtask_rcd = curs.fetchone()
     task_end_time = my_data_converter.datetime_str2datetime(subtask_rcd[2])
     task_timedelta = task_end_time - task_start_time  # 该子任务的持续时间
@@ -225,14 +227,14 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
         task_abd += task_timedelta
         curs.execute(
             'update ONGOING_TASKS set time_abd = "{task_abd}" where name = "{task_name}"'.format(task_abd=task_abd,
-                                                                                               task_name=task_name))
+                                                                                                 task_name=task_name))
         # 再把子任务状态设置为已完成
         curs.execute(
             'update "{task_name}" set status = "{status}" where start_time = "{start_time}"'.format(task_name=task_name,
-                                                                                                status=
-                                                                                                SUBTASK_STATUS_CODE[
-                                                                                                    'finish'],
-                                                                                                start_time=task_start_time))
+                                                                                                    status=
+                                                                                                    SUBTASK_STATUS_CODE[
+                                                                                                        'finish'],
+                                                                                                    start_time=task_start_time))
         # TODO: 根据数据分析要求，更新历史记录表
     # 如果是删除任务操作
     elif terminate_code == SUBTASK_STATUS_CODE['delete']:
@@ -243,7 +245,7 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
         task_estimated -= task_timedelta
         # 直接移除任务
         curs.execute('delete from "{task_name}" where start_time = "{start_time}"'.format(task_name=task_name,
-                                                                                        start_time=task_start_time))
+                                                                                          start_time=task_start_time))
         # TODO: 根据数据分析要求，更新历史记录表
     db_end(conn, curs)
 
@@ -255,7 +257,7 @@ def terminate_task(usr_id: str, task_name: str, terminate_code: int):
     if terminate_code != SUBTASK_STATUS_CODE['delete']:
         curs.execute(
             'update ONGOING_TASKS set status = "{status}" where name = "{task_name}"'.format(status=terminate_code,
-                                                                                           task_name=task_name))
+                                                                                             task_name=task_name))
     else:
         curs.execute('delete from ONGOING_TASKS where name = "{task_name}"'.format(task_name=task_name))
         curs.execute('drop table "{task_name}"'.format(task_name=task_name))

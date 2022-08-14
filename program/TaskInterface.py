@@ -8,7 +8,7 @@ from Tools import base_op
 
 class TaskInterface(QWidget):
     switch1 = QtCore.pyqtSignal(dict)  # for edit: taskCard->taskInterface
-    switch2 = QtCore.pyqtSignal(list)  # for edit: taskInterface->MainWindow
+    switch2 = QtCore.pyqtSignal()  # for edit: taskInterface->MainWindow
     switch3 = QtCore.pyqtSignal(str)  # for delete: taskCard->taskInterface
     switch4 = QtCore.pyqtSignal()  # for delete: taskInterface->MainWindow
     switch3_ = QtCore.pyqtSignal(str, QtCore.QDateTime)  # for delete: taskCard->taskInterface
@@ -69,21 +69,18 @@ class TaskInterface(QWidget):
 
     def deleteTaskFromDate(self, task_name, task_start_time):
         date = QtCore.QDate.fromString(task_start_time.toString("yyyy/MM/dd"), "yyyy/MM/dd")
-        base_op.delete_subtask(task_name=task_name, task_start_time=task_start_time)
         # 后端处理
-
+        base_op.delete_subtask(task_name=task_name, task_start_time=task_start_time)
         # 以下勿删
         self.switch4_.emit(date)
 
     def editTask(self, task_dict):  # 传入的是switch1.emit(arg)的参数arg，即shortTaskDict
-        print("now edit is ")
-        print(task_dict)
         base_op.mod_task(task_name=task_dict['name'], task_mod_dict=task_dict)
         # 后端处理
         base_op.re_arrange()
-        newTaskList = self.searchTask({})  # 这个搜索根据后端实现改
-        # 以下勿删
-        self.switch2.emit(newTaskList)
+        # newTaskList = self.searchTask({})  # 这个搜索根据后端实现改
+        #self.switch2.emit(newTaskList)
+        self.switch2.emit()
 
     # 任务管理界面：完成任务
     def finishTask(self, task_dict):

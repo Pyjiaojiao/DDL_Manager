@@ -33,6 +33,7 @@ class MainWindow(QMainWindow, mainUi):
         self.newtask.pushButton.clicked.connect(self.addNewTask)
         taskInterface.switch2.connect(self.reWriteTask)
         taskInterface.switch4.connect(self.deleteTask)
+        taskInterface.switch4_.connect(self.deleteTaskFromDate)
         taskInterface.switch6.connect(self.goThatDayTask)
         taskInterface.switch8.connect(self.searchInTaskManage)
         taskInterface.switch10.connect(self.searchInEverydayTask)
@@ -68,8 +69,6 @@ class MainWindow(QMainWindow, mainUi):
         self.leftTabWidget.taskManageWidget.searchTask()
         self.leftTabWidget.taskManageWidget.PageWidget.setPageMode(2)
         #self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate(self.leftTabWidget.everyDayTaskWidget.date)
-        #print("afterAddTaskList")
-        #print(newTaskList)
         #self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(newTaskList)  # 添加任务结束，一定回到任务管理页面
         '''
         # 修好每日任务后解除注释吧！
@@ -80,17 +79,19 @@ class MainWindow(QMainWindow, mainUi):
         self.newtask.close()
 
     def deleteTask(self):
-        # print("received" + task_list.__str__())
         #newTaskList = taskInterface.searchTask({})
         #self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(newTaskList)
         self.leftTabWidget.taskManageWidget.searchTask()
 
     def deleteTaskFromDate(self, date):
-        newTaskList = taskInterface.searchTaskFromDate(date, {})
-        self.leftTabWidget.everyDayTaskWidget.PageWidget.updateTaskList(newTaskList)
+        #newTaskList = taskInterface.searchTaskFromDate(date, {})
+        #self.leftTabWidget.everyDayTaskWidget.PageWidget.updateTaskList(newTaskList)
+        self.leftTabWidget.everyDayTaskWidget.updateDate(date)
+        self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
 
-    def reWriteTask(self, task_list):
-        self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(task_list)
+    def reWriteTask(self):
+        self.leftTabWidget.taskManageWidget.searchTask()
+        #self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(task_list)
 
     def goThatDayTask(self, task_list, date):
         self.leftTabWidget.everyDayTaskWidget.PageWidget.updateTaskList(task_list)

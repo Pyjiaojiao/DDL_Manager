@@ -125,7 +125,7 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.detailLabel.setFont(font)
         self.detailLabel.setObjectName("detailLabel")
         # textBrowser: 详情描述
-        self.textBrowser = QtWidgets.QTextBrowser(self.widget)
+        self.textBrowser = QtWidgets.QTextEdit(self.widget)
         self.textBrowser.setGeometry(QtCore.QRect(170, 500, 300, 100))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -140,7 +140,7 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.textBrowser.setObjectName("textBrowser")
 
         # label_9:任务名称
-        self.label_9 = QtWidgets.QLineEdit(self.widget)
+        self.label_9 = QtWidgets.QLabel(self.widget)
         self.label_9.setGeometry(QtCore.QRect(170, 70, 300, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -202,7 +202,7 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.comboBox.setStyleSheet("background-color:rgb(238, 238, 238);\n"
                                     "border-radius:5px\n"
                                     "")
-        #self.comboBox.setText("")
+        # self.comboBox.setText("")
         self.comboBox.setObjectName("label_12")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
@@ -222,8 +222,8 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         font.setFamily("微软雅黑 Light")
         self.comboBox_2.setFont(font)
         self.comboBox_2.setStyleSheet("background-color:rgb(238, 238, 238);\n"
-                                    "border-radius:5px")
-        #self.comboBox_2.setText("")
+                                      "border-radius:5px")
+        # self.comboBox_2.setText("")
         self.comboBox_2.setObjectName("label_13")
         self.comboBox_2.addItem("")
         self.comboBox_2.addItem("")
@@ -290,7 +290,6 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         self.modifyButton.setText("")
         self.modifyButton.setObjectName("modifyButton")
 
-
         self.returnButton.clicked.connect(self.close)
 
         self.retranslateUi(self)
@@ -320,9 +319,7 @@ class myTaskDetailWidget(QtWidgets.QWidget):
 
     def updateTask(self, task_dict):
         self.taskDict = task_dict
-        print(task_dict)
         self.label_9.setText(self.taskDict['name'])
-        print(self.taskDict['startTime'])
         self.label_10.setDateTime(self.taskDict['startTime'])
         self.label_11.setDateTime(self.taskDict['endTime'])
         if self.taskDict.__contains__('costTime'):
@@ -334,7 +331,8 @@ class myTaskDetailWidget(QtWidgets.QWidget):
             self.label_14.setChecked(True)
         else:
             self.label_14.setChecked(False)
-        typeList = ["学习", "工作", "运动", "娱乐", "其他"]
+        self.label_14.setEnabled(False)
+        typeList = ["学习", "运动", "娱乐", "工作", "其他"]
         self.comboBox.setCurrentIndex(typeList.index(self.taskDict['type']))
         self.comboBox_2.setCurrentIndex(self.taskDict['importance'])
         status = self.calStatusDegree(self.taskDict['status'])

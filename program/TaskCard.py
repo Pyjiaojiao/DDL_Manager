@@ -183,16 +183,6 @@ class myTaskCard(QtWidgets.QWidget):
         self.label_4.setText(_translate("MainWindow", "TextLabel"))
         self.label_6.setText(_translate("MainWindow", "TextLabel"))
 
-    '''       taskDict = {'name': name,  # str
-                    'isDaily': isDaily,  # boolean
-                    'startTime': startTime,  # QDateTime
-                    'endTime': endTime,  # QDateTime
-                    'type': taskType,  # str
-                    'importance': importance,  # int 从0开始数字越大越重要，最重要为3
-                    'status': status,  # int 从0开始数字越大完成度越高，最高为3
-                    'detail': detail}  # str
-    '''
-
     def updateTask(self, task_dict):
         if task_dict is None:
             self.frame.setVisible(False)
@@ -212,7 +202,9 @@ class myTaskCard(QtWidgets.QWidget):
         self.pushButton_2.setVisible(bool)
 
     def deleteTask(self):
+        print("self.pageMode is " + str(self.pageMode))
         if self.pageMode == 1:
+            print(self.taskDict)
             taskInterface.switch3_.emit(str(self.taskDict['name']), self.taskDict['startTime'])
         elif self.pageMode == 2:
             print("pre delete" + str(self.taskDict['name']))
@@ -222,9 +214,9 @@ class myTaskCard(QtWidgets.QWidget):
     def rewriteTask(self):
         name = self.taskDetailWidget.label_9.text()
         isDaily = self.taskDetailWidget.label_14.isChecked()
-        startTime = QtCore.QDate.fromString(self.taskDetailWidget.label_10.text(), "yyyy-MM-dd")
+        startTime = self.taskDetailWidget.label_10.dateTime()
         costTime = self.taskDetailWidget.timeEdit.time()
-        endTime = QtCore.QDate.fromString(self.taskDetailWidget.label_11.text(), "yyyy-MM-dd")
+        endTime = self.taskDetailWidget.label_11.dateTime()
         taskType = self.taskDetailWidget.comboBox.currentText()
         importance = self.taskDetailWidget.comboBox_2.currentIndex()
         status = int(self.progressBar.property("value")) / 33
@@ -247,8 +239,8 @@ class myTaskCard(QtWidgets.QWidget):
     def checkEdit(self, task_dict):
         shortDict = {'name': task_dict['name']}
         for key in self.taskDict:
-            if key in task_dict and self.taskDict[key] != task_dict[key]\
-                    and key != 'endTime' and key != 'startTime':
+            if key in task_dict and self.taskDict[key] != task_dict[key]:
+                    #and key != 'endTime' and key != 'startTime':
                 shortDict.update({key: task_dict[key]})
         return shortDict
 

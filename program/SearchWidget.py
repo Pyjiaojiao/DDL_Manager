@@ -108,6 +108,8 @@ class mySearchWidget(QWidget):
         self.comboBox_3.addItem("")
         # 是否日常
         self.checkBox = QtWidgets.QCheckBox(self)
+        self.checkBox.setTristate(True)
+        self.checkBox.setCheckState(QtCore.Qt.PartiallyChecked)
         self.checkBox.setGeometry(QtCore.QRect(620, 15, 105, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -148,16 +150,18 @@ class mySearchWidget(QWidget):
         self.comboBox_2.setItemText(4, _translate("Form", "娱乐"))
         self.comboBox_2.setItemText(5, _translate("Form", "其他"))
         self.comboBox_3.setItemText(0, _translate("Form", "选择重要性"))
-        self.comboBox_3.setItemText(1, _translate("Form", "非常重要"))
-        self.comboBox_3.setItemText(2, _translate("Form", "重要"))
-        self.comboBox_3.setItemText(3, _translate("Form", "一般"))
-        self.comboBox_3.setItemText(4, _translate("Form", "不重要"))
+        self.comboBox_3.setItemText(4, _translate("Form", "非常重要"))
+        self.comboBox_3.setItemText(3, _translate("Form", "重要"))
+        self.comboBox_3.setItemText(2, _translate("Form", "一般"))
+        self.comboBox_3.setItemText(1, _translate("Form", "不重要"))
         self.checkBox.setText(_translate("Form", "日常任务"))
 
     def getFeatureDict(self):
-        feature_dict = {
-            'isDaily': self.checkBox.isChecked()
-        }
+        feature_dict = {}
+        if self.checkBox.checkState() == QtCore.Qt.Checked: # 选中是日常任务，不选中非日常任务，半选中均有
+            feature_dict.update({'isDaily': True})
+        elif self.checkBox.checkState() == QtCore.Qt.Unchecked:
+            feature_dict.update({'isDaily': False})
         if self.comboBox_2.currentIndex() != 0:
             # print("now type is " + self.comboBox_2.currentIndex().__str__())
             typeList = ["学习", "工作", "运动", "娱乐", "其他"]

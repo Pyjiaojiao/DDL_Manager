@@ -19,8 +19,9 @@ from PyQt5.QtCore import QTime, QDateTime
 
 USR_ID = 0  # 当前正在操作用户
 
-TRIVIAL_KEY = {'type', 'detail', 'name'}
-SCHEDULE_KEY = {'is_daily', 'priority', 'time_estimated', 'ddl'}
+NAME_KEY = {'name'}
+TRIVIAL_KEY = {'type', 'detail'}
+SCHEDULE_KEY = {'priority', 'time_estimated', 'start_date', 'ddl'}
 STATUS_KEY = {'status'}
 RANGE_KEY = ['start_date', 'end_date']
 
@@ -75,8 +76,10 @@ def mod_task(usr_id: str = USR_ID, task_name="test", task_start_time: QDateTime 
     # 数据库函数已写，待讨论调用形式
     for key in task_mod_dict:
         if key in SCHEDULE_KEY:
-            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, value=task_mod_dict[key])
+            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, new_val=str(task_mod_dict[key]))
             # TODO: 是否触发调度？
+        elif key in TRIVIAL_KEY:
+            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, new_val=str(task_mod_dict[key]))
 
 
 def finish_subtask(usr_id: str = USR_ID, task_name="test", task_start_time: QDateTime = None):
@@ -166,7 +169,6 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
             my_data_base.get_ongoing_tasks_rcds(usr_id=usr_id, specify_str=specify_str_4task))
         for task in tasks:
             start_time_str, end_time_str = my_data_base.get_task_startTime_and_endTime(usr_id, task['name'])
-            # print("ttttt" + start_time_str + end_time_str)
             task['startTime'] = my_data_converter.datetime_str2QDateTime(start_time_str) if start_time_str else None
             task['endTime'] = my_data_converter.datetime_str2QDateTime(end_time_str) if end_time_str else None
         return tasks
@@ -191,8 +193,8 @@ def debug():
                  'isDaily': False,  # bool
                  'startTime': QDateTime(1970, 1, 1, 0, 0),  # QDateTime
                  'endTime': QDateTime(2050, 1, 1, 0, 0),  # QDateTime
-                 'startDate': QDateTime(2022, 8, 14, 0, 0).date(),
-                 'endDate': QDateTime(2022, 8, 14, 0, 0).date(),
+                 'startDate': QDateTime(2022, 8, 15, 0, 0).date(),
+                 'endDate': QDateTime(2022, 8, 15, 0, 0).date(),
                  'costTime': QTime(3, 30),  # QTime
                  'type': "运动",  # str
                  'importance': 0,  # int:[0,4)
@@ -225,6 +227,10 @@ def debug():
     for item in rcd2:
         item.sort(key=lambda e: e['startTime'])
         print([(e['name'], e['startTime'], e['endTime'], e['type']) for e in item])
+    mod_task("admin", "111", QDateTime.fromString('2022-8-15 08:00', "yyyy-MM-dd hh:mm"),
+             {"ddl": datetime.datetime(2022, 8, 21).date()})
+    rcds = load_specified_subtasks({})
+    print(rcds)
 
 
 if __name__ == '__main__':
