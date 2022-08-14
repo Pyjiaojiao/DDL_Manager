@@ -123,7 +123,7 @@ def register(usr_id: str, password: str) -> 'Finish Code':
 
 def login(usr_id: str, password_in: str) -> 'Finish Code':
     password_encrypted = encrypt_usr_password(password_in)
-    if not my_data_base.usr_login(usr_id, password_encrypted):
+    if my_data_base.usr_login(usr_id, password_encrypted) < 0:
         # login failed
         return -1
     # login succeed
@@ -182,8 +182,10 @@ def _update_all_ongoing_tasks_status(usr_id: str):
 
 def debug():
     register("admin", '123')
-    if login('admin', '123') == 0:
+    if login('admi', '345') == 0:
         print('login succeed!')
+    else:
+        exit()
     task_dict = {'name': "TestTask",  # str
                  'isDaily': False,  # bool
                  'startTime': QDateTime(1970, 1, 1, 0, 0),  # QDateTime

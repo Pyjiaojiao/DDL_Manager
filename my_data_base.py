@@ -404,6 +404,7 @@ def _is_curs_empty(cursor: sqlite3.Cursor) -> bool:
 def is_usr_existed(usr_id: str):
     filename = _usr_id2db_filename(usr_id)
     path = pathlib.Path(filename)
+    print(path)
     return path.exists()
 
 
@@ -433,7 +434,9 @@ def usr_register(usr_id: str, encrypted_password: str):
 
 def usr_login(usr_id: str, password_in: str):
     if not is_usr_existed(usr_id):
+        print("用户不存在")
         return -1
     elif not is_password_correct(usr_id, password_in):
+        print("密码错误")
         return -2
     return 0
