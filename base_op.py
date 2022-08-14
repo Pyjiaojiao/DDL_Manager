@@ -19,7 +19,8 @@ from PyQt5.QtCore import QTime, QDateTime
 
 USR_ID = 0  # 当前正在操作用户
 
-TRIVIAL_KEY = {'type', 'detail', 'name'}
+NAME_KEY = {'name'}
+TRIVIAL_KEY = {'type', 'detail'}
 SCHEDULE_KEY = {'is_daily', 'priority', 'time_estimated', 'ddl'}
 STATUS_KEY = {'status'}
 RANGE_KEY = ['start_date', 'end_date']
@@ -75,8 +76,10 @@ def mod_task(usr_id: str = USR_ID, task_name="test", task_start_time: QDateTime 
     # 数据库函数已写，待讨论调用形式
     for key in task_mod_dict:
         if key in SCHEDULE_KEY:
-            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, value=task_mod_dict[key])
+            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, new_val=task_mod_dict[key])
             # TODO: 是否触发调度？
+        elif key in TRIVIAL_KEY:
+            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, new_val=task_mod_dict[key])
 
 
 def finish_subtask(usr_id: str = USR_ID, task_name="test", task_start_time: QDateTime = None):
