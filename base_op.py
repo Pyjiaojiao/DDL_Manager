@@ -166,8 +166,9 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
             my_data_base.get_ongoing_tasks_rcds(usr_id=usr_id, specify_str=specify_str_4task))
         for task in tasks:
             start_time_str, end_time_str = my_data_base.get_task_startTime_and_endTime(usr_id, task['name'])
-            task['startTime'] = my_data_converter.date_str2QDateTime(start_time_str) if start_time_str else None
-            task['endTime'] = my_data_converter.date_str2QDateTime(end_time_str) if end_time_str else None
+            print("ttttt" + start_time_str + end_time_str)
+            task['startTime'] = my_data_converter.datetime_str2QDateTime(start_time_str) if start_time_str else None
+            task['endTime'] = my_data_converter.datetime_str2QDateTime(end_time_str) if end_time_str else None
         return tasks
     else:
         # 有date需求，认为是在日历系统查询
