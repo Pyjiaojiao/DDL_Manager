@@ -126,7 +126,7 @@ def rename_task(usr_id, old_name, new_name):
 def normal_modify(usr_id, task_name, key, new_val):
     conn, curs = db_start(usr_id)
     # if is in ONGOING_TASKS table
-    curs.execute("update ONGOING_TASKS set {key}={new_val} where name = '{task_name}'".format(key=key, new_val=new_val))
+    curs.execute("update ONGOING_TASKS set {key}='{new_val}' where name = '{task_name}'".format(key=key, new_val=new_val))
     db_end(conn, curs)
 
 
@@ -156,12 +156,12 @@ def clear_scheduled_subtasks(usr_id):
         if not is_daily:
             # curs.execute('drop table if exists {table_name}'.format(table_name=task_name))
             curs.execute(
-                '''create table if not exists {table_name}
+                '''create table if not exists "{table_name}"
                 (date date, start_time datetime, end_time datetime, status int)'''.format(table_name=task_name))
-            curs.execute('delete from {table_name} where status != {finish_code}'.
+            curs.execute('delete from "{table_name}" where status != "{finish_code}"'.
                          format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish']))
         else:
-            curs.execute('delete from {table_name} where status != {finish_code} and status != {time_out_code}'
+            curs.execute('delete from "{table_name}" where status != "{finish_code}" and status != "{time_out_code}"'
                          .format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish'],
                                  time_out_code=SUBTASK_STATUS_CODE['time_out']))
     db_end(conn, curs)
@@ -194,7 +194,7 @@ def get_specified_subtasks(usr_id: str, specify_str_4task: str, specify_str_4sub
     ret = []
     for row in ongoing_task_rcd_list:
         task_name = row[0]
-        tbl_slct = 'select * from {table_name}'.format(table_name=task_name) + specify_str_4subtask
+        tbl_slct = 'select * from "{table_name}"'.format(table_name=task_name) + specify_str_4subtask
         # print(tbl_slct)
         curs.execute(tbl_slct)
         # subtasks_rcd_list = []
@@ -211,7 +211,7 @@ def get_specified_subtasks(usr_id: str, specify_str_4task: str, specify_str_4sub
 def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, terminate_code: int):
     conn, curs = db_start(usr_id)
     # 获取子任务持续时间
-    curs.execute('select * from "{task_name}" where start_time = {start_time}'.format(task_name=task_name,
+    curs.execute('select * from "{task_name}" where start_time = "{start_time}"'.format(task_name=task_name,
                                                                                       start_time=task_start_time))
     subtask_rcd = curs.fetchone()
     task_end_time = my_data_converter.datetime_str2datetime(subtask_rcd[2])
@@ -224,11 +224,11 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
         task_abd = my_data_converter.datetime_str2datetime(task_rcd[4])  # 该子任务对应的总任务的已完成时间
         task_abd += task_timedelta
         curs.execute(
-            'update ONGOING_TASKS set time_abd = {task_abd} where name = "{task_name}"'.format(task_abd=task_abd,
+            'update ONGOING_TASKS set time_abd = "{task_abd}" where name = "{task_name}"'.format(task_abd=task_abd,
                                                                                                task_name=task_name))
         # 再把子任务状态设置为已完成
         curs.execute(
-            'update "{task_name}" set status = {status} where start_time = {start_time}'.format(task_name=task_name,
+            'update "{task_name}" set status = "{status}" where start_time = "{start_time}"'.format(task_name=task_name,
                                                                                                 status=
                                                                                                 SUBTASK_STATUS_CODE[
                                                                                                     'finish'],
@@ -242,7 +242,7 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
         task_estimated = my_data_converter.datetime_str2datetime(task_rcd[3])
         task_estimated -= task_timedelta
         # 直接移除任务
-        curs.execute('delete from "{task_name}" where start_time = {start_time}'.format(task_name=task_name,
+        curs.execute('delete from "{task_name}" where start_time = "{start_time}"'.format(task_name=task_name,
                                                                                         start_time=task_start_time))
         # TODO: 根据数据分析要求，更新历史记录表
     db_end(conn, curs)
@@ -254,7 +254,7 @@ def terminate_task(usr_id: str, task_name: str, terminate_code: int):
     conn, curs = db_start(usr_id)
     if terminate_code != SUBTASK_STATUS_CODE['delete']:
         curs.execute(
-            'update ONGOING_TASKS set status = {status} where name = "{task_name}"'.format(status=terminate_code,
+            'update ONGOING_TASKS set status = "{status}" where name = "{task_name}"'.format(status=terminate_code,
                                                                                            task_name=task_name))
     else:
         curs.execute('delete from ONGOING_TASKS where name = "{task_name}"'.format(task_name=task_name))
@@ -265,7 +265,7 @@ def terminate_task(usr_id: str, task_name: str, terminate_code: int):
 # 利用计组数电知识更新状态表。precondition：子任务表非空
 def _update_ongoing_task_status_logic(usr_id: str, task_name):
     conn, curs = db_start(usr_id)
-    tbl_slct = 'select * from "{task_name}" where status = {status}'.format(task_name=task_name, status="{status}")
+    tbl_slct = 'select * from "{task_name}" where status = "{status}"'.format(task_name=task_name, status="{status}")
     curs.execute(tbl_slct.format(status=SUBTASK_STATUS_CODE['not_start']))
     A = not _is_curs_empty(curs)  # not_start
     curs.execute(tbl_slct.format(status=SUBTASK_STATUS_CODE['doing']))
@@ -277,7 +277,7 @@ def _update_ongoing_task_status_logic(usr_id: str, task_name):
     big_task_status_E = (C or D) and (not B) and (not A)
     big_task_status_F = C or B or (A and D)
     status_d_int = big_task_status_E * 2 + big_task_status_F
-    tbl_upd = 'update ONGOING_TASKS set status = {new_status} where name = "{task_name}"'.format(
+    tbl_upd = 'update ONGOING_TASKS set status = "{new_status}" where name = "{task_name}"'.format(
         new_status=status_d_int, task_name=task_name)
     # print("tbl_upd", tbl_upd)
     curs.execute(tbl_upd)
@@ -324,32 +324,32 @@ def update_subtasks_status(usr_id: str, dt_now: datetime, task_name: str):
     #     'select * from "{task_name}" where status = {not_start_code} and start_time <= "{dt_now}" and end_time >= "{dt_now}"'.format(
     #         task_name=task_name, not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
     curs.execute(
-        'select * from "{task_name}" where status = {not_start_code} and start_time <= "{dt_now}" and end_time >= "{dt_now}"'.format(
+        'select * from "{task_name}" where status = "{not_start_code}" and start_time <= "{dt_now}" and end_time >= "{dt_now}"'.format(
             task_name=task_name, not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
     # 如果存在命中结果，则更新数据
     if not _is_curs_empty(curs):
-        curs.execute('update ONGOING_TASKS set status = {doing_code} where name = "{task_name}"'.format(
+        curs.execute('update ONGOING_TASKS set status = "{doing_code}" where name = "{task_name}"'.format(
             doing_code=SUBTASK_STATUS_CODE['doing'], task_name=task_name))  # 更新ONGOING_TASKS
         curs.execute(
-            'update "{task_name}" set status = {doing_code} where status = {not_start_code} and start_time <= "{dt_now}" and endtime >= "{dt_now}"'.format(
+            'update "{task_name}" set status = "{doing_code}" where status = "{not_start_code}" and start_time <= "{dt_now}" and endtime >= "{dt_now}"'.format(
                 task_name=task_name, doing_code=SUBTASK_STATUS_CODE['doing'],
                 not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))  # 更新具体的任务table
     # 再检查有无可以从 正在进行 -> 已过期
     curs.execute(
-        'select * from "{task_name}" where status = {doing_code} and end_time < "{dt_now}"'.format(
+        'select * from "{task_name}" where status = "{doing_code}" and end_time < "{dt_now}"'.format(
             task_name=task_name, doing_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
     # 存在这样的任务，更新状态
     if not _is_curs_empty(curs):
         curs.execute(
-            'update "{task_name}" set status = {time_out_code} where status = {doing_code} and end_time < "{dt_now}"'.format(
+            'update "{task_name}" set status = "{time_out_code}" where status = "{doing_code}" and end_time < "{dt_now}"'.format(
                 task_name=task_name, doing_code=SUBTASK_STATUS_CODE['doing'],
                 time_out_code=SUBTASK_STATUS_CODE['time_out'], dt_now=dt_now))  # 更新具体的任务table
     # 再检查有无可以从 未开始 -> 已过期
-    curs.execute('select * from "{task_name}" where status = {not_start_code} and end_time < "{dt_now}"'.format(
+    curs.execute('select * from "{task_name}" where status = "{not_start_code}" and end_time < "{dt_now}"'.format(
         task_name=task_name, not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
     if not _is_curs_empty(curs):
         curs.execute(
-            'update "{task_name}" set status = {time_out_code} where status = {not_start_code} and end_time < "{dt_now}"'.format(
+            'update "{task_name}" set status = "{time_out_code}" where status = "{not_start_code}" and end_time < "{dt_now}"'.format(
                 task_name=task_name, time_out_code=SUBTASK_STATUS_CODE['time_out'],
                 not_start_code=SUBTASK_STATUS_CODE['not_start'], dt_now=dt_now))
     db_end(conn, curs)
@@ -420,6 +420,8 @@ def is_password_correct(usr_id: str, password_in_encrypted: str):
 
 def usr_update_password(usr_id: str, encrypted_password: str):
     conn, curs = db_start(usr_id)
+    tbl_drp = 'drop table if exists PASS_WORD'
+    curs.execute(tbl_drp)
     tbl_crt = 'create table if not exists PASS_WORD(pass_word text)'
     curs.execute(tbl_crt)
     curs.execute('delete from PASS_WORD')
@@ -436,7 +438,7 @@ def usr_login(usr_id: str, password_in: str):
     if not is_usr_existed(usr_id):
         print("用户不存在")
         return -1
-    elif not is_password_correct(usr_id, password_in):
+    elif is_password_correct(usr_id, password_in) != 0:
         print("密码错误")
         return -2
     return 0

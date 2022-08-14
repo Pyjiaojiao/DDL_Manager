@@ -149,7 +149,7 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
     specify_keys_4subtask = []
     for key in specify:
         if key in QRY_MANAGER_KEY:
-            specify_keys_4task.append(key + ' = ' + str(specify[key]))
+            specify_keys_4task.append(key + ' = "' + str(specify[key]) + '"')
         elif key in QRY_DATE_KEY:
             specify_keys_4subtask.append(key + ' = ' + '"' + str(specify[key]) + '"')
         # elif key == 'start_date':
@@ -181,35 +181,35 @@ def _update_all_ongoing_tasks_status(usr_id: str):
 
 
 def debug():
-    register("admin", '123')
-    if login('admi', '345') == 0:
+    register("admin", '123456')
+    if login("admin", '123456') == 0:
         print('login succeed!')
     else:
         exit()
-    task_dict = {'name': "TestTask",  # str
+    task_dict = {'name': "111",  # str
                  'isDaily': False,  # bool
                  'startTime': QDateTime(1970, 1, 1, 0, 0),  # QDateTime
                  'endTime': QDateTime(2050, 1, 1, 0, 0),  # QDateTime
                  'startDate': QDateTime(2022, 8, 14, 0, 0).date(),
                  'endDate': QDateTime(2022, 8, 14, 0, 0).date(),
                  'costTime': QTime(3, 30),  # QTime
-                 'type': None,  # str
+                 'type': "运动",  # str
                  'importance': 0,  # int:[0,4)
                  'status': 0,  # int:[0,4)
                  'detail': "Detail Text"}  # str
     add_task("admin", task_dict=task_dict)
-    task_dict = {'name': "DAILY",  # str
+    task_dict = {'name': "日常任务",  # str
                  'isDaily': True,  # bool
                  'startTime': QDateTime(1970, 1, 1, 0, 0),  # QDateTime
                  'endTime': QDateTime(2050, 1, 1, 0, 0),  # QDateTime
                  'startDate': QDateTime(2022, 8, 15, 0, 0).date(),
                  'endDate': QDateTime(2022, 8, 19, 0, 0).date(),
                  'costTime': QTime(3, 30),  # QTime
-                 'type': None,  # str
+                 'type': "学习",  # str
                  'importance': 0,  # int:[0,4)
                  'status': 0,  # int:[0,4)
                  'detail': "Detail Text"}  # str
-    add_task("admin", task_dict=task_dict)
+    # add_task("admin", task_dict=task_dict)
     qdict = {}
     print("USR_ID is %s" % USR_ID)
     rcds = load_specified_subtasks(specify=qdict)
@@ -223,7 +223,7 @@ def debug():
     # print(rcd2)
     for item in rcd2:
         item.sort(key=lambda e: e['startTime'])
-        print([(e['name'], e['startTime'], e['endTime']) for e in item])
+        print([(e['name'], e['startTime'], e['endTime'], e['type']) for e in item])
 
 
 if __name__ == '__main__':
