@@ -148,6 +148,17 @@ def get_ongoing_tasks_rcds(usr_id: str, specify_str: str = '') -> 'Task records 
     return rcd_list
 
 
+# 返回某一任务的全部subtask
+def get_subtask_rcds(usr_id: str, task_name: str) -> list:
+    conn, curs = db_start(usr_id)
+    curs.execute(
+        '''create table if not exists "{table_name}"
+        (date date, start_time datetime, end_time datetime, status int)'''.format(table_name=task_name))
+    curs.execute('select * from "{task_name}"'.format(task_name=task_name))
+    ret = curs.fetchall()
+    db_end(conn, curs)
+    return ret
+
 # clear现在不会清除已完成的任务，且不会清除已过期和已完成的日常任务
 def clear_scheduled_subtasks(usr_id):
     conn, curs = db_start(usr_id)
