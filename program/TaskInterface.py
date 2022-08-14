@@ -90,6 +90,9 @@ class TaskInterface(QWidget):
     # 每日任务界面：完成任务
     def finishTaskFromDate(self, date, task_dict):
         # 后端处理，无需搜索
+        print("startTime is ")
+        print(task_dict['startTime'])
+        base_op.finish_subtask(task_name=task_dict['name'], task_start_time=task_dict['startTime'])
         self.switch18.emit(date)
 
     # 用于任务管理

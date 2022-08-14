@@ -87,6 +87,8 @@ def subtask2record(subtask: Task, subtask_status: int) -> list:
 
 
 def QDateTime2datetime(qdt: QDateTime) -> datetime:
+    print("qdt is ")
+    print(qdt)
     qdt_str = qdt.toString("yyyy-MM-dd hh:mm")
     return datetime.strptime(qdt_str, "%Y-%m-%d %H:%M")
 
@@ -110,3 +112,7 @@ def date_str2QDateTime(d_str: 'date_str') -> QDateTime:
 
 def date_str2QDate(d_str: 'date_str') -> QDate:
     return date_str2QDateTime(d_str).date()
+
+
+def date_str2date(d_str: str) -> datetime.date:
+    return datetime.strptime(d_str, "%Y-%m-%d")

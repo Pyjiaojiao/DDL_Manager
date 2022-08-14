@@ -139,7 +139,7 @@ def get_max_continuous_working_time(usr_id: str) -> datetime.time:
     return datetime.time(2, 0, 0)  # for test
 
 
-# 返回全部正在发生的任务, 返回值类型为list[Task[,...]]
+# 返回全部正在发生的任务, 返回值类型为list[Task record[,...]]
 def get_ongoing_tasks_rcds(usr_id: str, specify_str: str = '') -> 'Task records list':
     conn, curs = db_start(usr_id)
     curs.execute('select * from ONGOING_TASKS' + specify_str)
@@ -147,6 +147,17 @@ def get_ongoing_tasks_rcds(usr_id: str, specify_str: str = '') -> 'Task records 
     db_end(conn, curs)
     return rcd_list
 
+
+# 返回某一任务的全部subtask
+def get_subtask_rcds(usr_id: str, task_name: str) -> list:
+    conn, curs = db_start(usr_id)
+    curs.execute(
+        '''create table if not exists "{table_name}"
+        (date date, start_time datetime, end_time datetime, status int)'''.format(table_name=task_name))
+    curs.execute('select * from "{task_name}"'.format(task_name=task_name))
+    ret = curs.fetchall()
+    db_end(conn, curs)
+    return ret
 
 # clear现在不会清除已完成的任务，且不会清除已过期和已完成的日常任务
 def clear_scheduled_subtasks(usr_id):
@@ -385,6 +396,7 @@ def update_subtasks_status(usr_id: str, dt_now: datetime, task_name: str):
     #     db_end(conn, curs)
 
 
+# 返回 str, str 或 None, None
 def get_task_startTime_and_endTime(usr_id: str, task_name: str) -> tuple:
     conn, curs = db_start(usr_id)
     curs.execute(

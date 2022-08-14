@@ -193,10 +193,15 @@ class myTaskCard(QtWidgets.QWidget):
             self.label_4.setText(self.taskDict['name'])
             self.label_6.setText(self.taskDict['endDate'].toString(QtCore.Qt.DefaultLocaleShortDate))
             self.checkBox.setChecked(self.taskDict['status'] > 1)
-            self.progressBar.setProperty("value", self.taskDict['status'] * 25)
+            self.progressBar.setProperty("value", self.calStatusDegree())
             # if self.pageMode == 1:
             self.taskDetailWidget.updateTask(task_dict)
             self.frame.setVisible(True)
+
+    def calStatusDegree(self):
+        abd = int(self.taskDict['time_abd'].toString("yyyyMMddhh"))
+        est = int(self.taskDict['time_estimated'].toString("yyyyMMddhh"))
+        return (abd - 1900010100) / (est - 1900010100) * 100
 
     def changeDeleteMode(self, bool):
         self.pushButton_2.setVisible(bool)

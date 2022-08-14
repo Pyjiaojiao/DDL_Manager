@@ -335,12 +335,13 @@ class myTaskDetailWidget(QtWidgets.QWidget):
         typeList = ["学习", "运动", "娱乐", "工作", "其他"]
         self.comboBox.setCurrentIndex(typeList.index(self.taskDict['type']))
         self.comboBox_2.setCurrentIndex(self.taskDict['importance'])
-        status = self.calStatusDegree(self.taskDict['status'])
-        self.progressBar.setProperty("value", int(status))
+        self.progressBar.setProperty("value", self.calStatusDegree())
         self.textBrowser.setText(self.taskDict['detail'])
 
-    def calStatusDegree(self, status):
-        return int(status) * 33
+    def calStatusDegree(self):
+        abd = int(self.taskDict['time_abd'].toString("yyyyMMddhh"))
+        est = int(self.taskDict['time_estimated'].toString("yyyyMMddhh"))
+        return (abd - 1900010100) / (est - 1900010100) * 100
 
     def loadImportance(self, i):
         if i == 0:
