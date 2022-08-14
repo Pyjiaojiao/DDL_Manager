@@ -98,13 +98,13 @@ def login(usr_id: str, password_in: str) -> 'Finish Code':
 
 
 # 从db恢复已保存的全部子任务，返回列表，按date, start_time排序
-def load_all_subtasks(usr_id: str) -> list:
+def load_all_subtasks(usr_id: str = USR_ID) -> list:
     all_subtasks = my_data_base.get_all_ongoing_subtasks(usr_id)
     all_subtasks.sort(key=lambda e: (e.date, e.start_time))
     return all_subtasks
 
 
-def load_specified_subtasks(usr_id: str, specify: dict) -> list:
+def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
     pretreatment(specify)
     if not specify:
         return load_all_subtasks(usr_id)

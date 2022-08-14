@@ -221,8 +221,8 @@ def usr_update_password(usr_id: str, encrypted_password: str):
     curs = conn.cursor()
     tbl_crt = 'create table if not exists PASS_WORD(pass_word text)'
     curs.execute(tbl_crt)
-    curs.execute('delete from table PASS_WORD')
-    curs.execute('insert into table PASS_WORD values(?)', encrypted_password)
+    curs.execute('delete from PASS_WORD')
+    curs.execute('insert into PASS_WORD values(?)', encrypted_password)
     conn.commit()
     curs.close()
     conn.close()

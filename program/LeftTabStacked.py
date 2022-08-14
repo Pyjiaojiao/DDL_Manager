@@ -30,6 +30,7 @@ from TaskManagementWindow import TaskManagementWindow
 from EverydayTaskWindow import EveryDayTaskWindow
 from AccountManageWindow import AccountManageWindow
 from CalendarWidget import CalendarWidget
+from DataAnalysisWindow import DataAnalysisWindow
 
 
 class LeftTabWidget(QWidget):
@@ -37,10 +38,8 @@ class LeftTabWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super(LeftTabWidget, self).__init__(*args, **kwargs)
         self.everyDayTaskWidget = EveryDayTaskWindow()
-
-        # self.TaskManageWidget = TaskManageWindow()
         self.taskManageWidget = TaskManagementWindow()
-
+        self.dataAnalysisWidget = DataAnalysisWindow()
         self.accountManageWidget = AccountManageWindow()
 
         self.pageNames = ["每日任务", "任务管理", "日历系统", "数据分析", "账号选项"]
@@ -54,7 +53,7 @@ class LeftTabWidget(QWidget):
         self.listWidget.setGeometry(0, 0, 220, 720)
         #self.listWidget.setFixedSize(220, 720)
         self.listWidget.setStyleSheet("background-color: rgb(220, 220, 220);\n"
-"color: rgb(85, 85, 85)")
+        "color: rgb(85, 85, 85)")
         # layout.addWidget(self.listWidget)
         # 右侧层叠窗口
         # 右侧列表参数设置
@@ -90,71 +89,29 @@ class LeftTabWidget(QWidget):
             item.setSizeHint(QSize(16777215, 60))
             # 文字居中
             item.setTextAlignment(Qt.AlignCenter)
-        # 左侧下方的按钮
-        '''
-        leftBottomItem_1 = QListWidgetItem(QIcon('../src/icon/add.ico'), str(''), self.listWidget)
-        leftBottomItem_1.setSizeHint(QSize(30, 30))
-        leftBottomItem_1.setBackground(Qt.white)
-        '''
-        #self.listWidget
         # 右侧的页面
         # Page1：每日任务
         gridLayoutWidget_1 = QtWidgets.QWidget()
-        gridLayoutWidget_1.setStyleSheet("background-color:rgb(0,0,0,0)")
+        gridLayoutWidget_1.setStyleSheet("background-color:rgba(0,0,0,0)")
         gridLayoutWidget_1.setGeometry(220, 0, 1060, 720)
         gridLayOut_1 = QtWidgets.QGridLayout(gridLayoutWidget_1)
         gridLayOut_1.setContentsMargins(0, 0, 0, 0)
         self.everyDayTaskWidget.setObjectName("everyDayTask")
-        self.everyDayTaskWidget.setGeometry(220, 0, 1060, 720)
+        #self.everyDayTaskWidget.setGeometry(220, 0, 1060, 720)
         gridLayOut_1.addWidget(self.everyDayTaskWidget)
         self.stackedWidget.addWidget(gridLayoutWidget_1)
 
         # Page2：任务管理
         gridLayoutWidget_2 = QtWidgets.QWidget()
-        gridLayoutWidget_2.setGeometry(0, 0, 1060, 720)
+        gridLayoutWidget_2.setGeometry(220, 0, 1060, 720)
         gridLayOut_2 = QtWidgets.QGridLayout(gridLayoutWidget_2)
         gridLayOut_2.setContentsMargins(0, 0, 0, 0)
         self.taskManageWidget.setObjectName("taskManagement")
-        self.taskManageWidget.setGeometry(220, 0, 1060, 720)
-        # self.TaskManageWidget.setObjectName("taskManagement")
-        # self.TaskManageWidget.setGeometry(0, 0, 1060, 620)
+        # self.taskManageWidget.setGeometry(0, 0, 1060, 720)
         gridLayOut_2.addWidget(self.taskManageWidget)
-
-
-        '''self.frames_2 = []
-        for i in range(6):
-            f = TaskCard()
-            self.frames_2.append(f)
-            self.frames_2[i].updateTask(None)
-            self.taskManagementWidget.frame_2_layout.addWidget(self.frames_2[i], i // 3, i % 3)
-        #self.taskManagementWidget.frame_2_layout.addWidget(CalendarWidget())
-        task1 = {'name': "task1",
-                 'isDaily': False,
-                 'startTime': QDateTime(1970, 1, 1, 0, 0),
-                 'endTime': QDateTime(1970, 1, 1, 23, 59),
-                 'type': None,
-                 'importance': 0,
-                 'status': 2,
-                 'detail': None}
-        task2 = {'name': "task2",
-                 'isDaily': False,
-                 'startTime': QDateTime(1980, 1, 1, 0, 0),
-                 'endTime': QDateTime(1980, 1, 1, 0, 0),
-                 'type': None,
-                 'importance': 0,
-                 'status': 3,
-                 'detail': None}
-        self.frames_2[0].updateTask(task1)
-        self.frames_2[1].updateTask(task2)
-        self.frames_2[2].updateTask(task2)
-        self.frames_2[3].updateTask(task2)
-        self.frames_2[4].updateTask(task2)
-        self.frames_2[5].updateTask(task2)'''
         gridLayoutWidget_2.raise_()
         gridLayoutWidget_2.setLayout(gridLayOut_2)
         self.stackedWidget.addWidget(gridLayoutWidget_2)
-
-
 
         # Page3：日历系统
         gridLayoutWidget_3 = QtWidgets.QWidget()
@@ -165,17 +122,20 @@ class LeftTabWidget(QWidget):
         gridLayOut_3.addWidget(calendarWidget)
         self.stackedWidget.addWidget(gridLayoutWidget_3)
 
-        # Page4：数据恢复
+        # Page4：数据分析
         gridLayoutWidget_4 = QtWidgets.QWidget()
         gridLayoutWidget_4.setGeometry(0, 0, 1060, 720)
+        gridLayoutWidget_4.setStyleSheet("background-color: rgb(250, 236, 227)")
         gridLayOut_4 = QtWidgets.QGridLayout(gridLayoutWidget_4)
-        gridLayOut_4.setContentsMargins(20, 20, 20, 20)
+        gridLayOut_4.setContentsMargins(0, 0, 0, 0)
+        self.dataAnalysisWidget.setObjectName("dataAnalysis")
+        self.dataAnalysisWidget.test()
+        gridLayOut_4.addWidget(self.dataAnalysisWidget)
         self.stackedWidget.addWidget(gridLayoutWidget_4)
 
         # Page5：账号选项
         gridLayoutWidget_5 = QtWidgets.QWidget()
-        gridLayoutWidget_5.setGeometry(220, 0, 1060, 720)
-        gridLayoutWidget_5.setStyleSheet("background-color:rgb(0,0,0,0)")
+        gridLayoutWidget_5.setGeometry(0, 0, 1060, 720)
         gridLayOut_5 = QtWidgets.QGridLayout(gridLayoutWidget_5)
         gridLayOut_5.setContentsMargins(0, 0, 0, 0)
         gridLayOut_5.addWidget(self.accountManageWidget)
@@ -217,19 +177,6 @@ QStackedWidget {
 QLabel {
 }
 """
-'''
-if __name__ == '__main__':
-    import sys
-    from PyQt5.QtWidgets import QApplication
-
-    app = QApplication(sys.argv)
-    app.setStyleSheet(Stylesheet)
-    w = LeftTabWidget()
-    w.show()
-    sys.exit(app.exec_())
-'''
-# import src.icon.leftListIcons_rc
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = LeftTabWidget()

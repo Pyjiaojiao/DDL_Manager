@@ -47,7 +47,6 @@ class PageWidget(QtWidgets.QWidget):
         self.setupUi()
 
     def setupUi(self):
-
         for i in range(self.PageNum):
             layoutWidget = QtWidgets.QWidget()
             layoutWidget.setFixedSize(1040, 560)

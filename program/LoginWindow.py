@@ -3,8 +3,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
+from TaskInterface import taskInterface
 
 class Ui_MainWindow(object):
+    mode = 0 # mode = 0:登录模式 1:注册模式
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
@@ -137,6 +139,8 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
+        self.pushButton_5.clicked.connect(self.register)
+        self.pushButton_4.clicked.connect(self.login)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -147,6 +151,33 @@ class Ui_MainWindow(object):
         self.pushButton_4.setText(_translate("MainWindow", "登录"))
         self.lineEdit_2.setPlaceholderText(_translate("MainWindow", "密码"))
         self.checkBox.setText(_translate("MainWindow", "记住密码"))
+
+    def register(self):
+        # 先进入register模式
+        if self.mode == 0:
+            self.pushButton_5.setText("确认注册")
+            self.pushButton_4.setText("返回登陆")
+            self.mode = 1
+        else:
+            usrDict = {
+                'usr_id':str(self.lineEdit.text()),
+                'pwd':str(self.lineEdit_2.text())
+            }
+            taskInterface.switch11.emit(usrDict)
+        return
+    def login(self):
+        # 先进入login模式
+        if self.mode == 1:
+            self.pushButton_5.setText("注册")
+            self.pushButton_4.setText("登陆")
+            self.mode = 0
+        else:
+            usrDict = {
+                'usr_id': self.lineEdit.text(),
+                'pwd': self.lineEdit_2.text()
+            }
+            taskInterface.switch13.emit(usrDict)
+        return
 
 import src.images.Login_rc
 

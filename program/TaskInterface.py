@@ -3,7 +3,7 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import QDateTime, QTime
 from PyQt5.QtWidgets import QWidget, QApplication
-from Tools import base_op
+#from Tools import base_op
 
 
 class TaskInterface(QWidget):
@@ -17,6 +17,10 @@ class TaskInterface(QWidget):
     switch8 = QtCore.pyqtSignal(list)  # for search: taskInterface->MainWindow
     switch9 = QtCore.pyqtSignal(QtCore.QDateTime, dict)  # for search:everydayTask->taskInterface
     switch10 = QtCore.pyqtSignal(list)  # for search:everydayTask->taskInterface
+    switch11 = QtCore.pyqtSignal(dict)  # for register:loginWindow->taskInterface
+    switch12 = QtCore.pyqtSignal()  # for register:taskInterface->loginWindow
+    switch13 = QtCore.pyqtSignal(dict)  # for login:loginWindow->taskInterface
+    switch14 = QtCore.pyqtSignal()  # for login:taskInterface->MainWindow
 
     def __init__(self, user_id):
         super(TaskInterface, self).__init__()
@@ -39,9 +43,11 @@ class TaskInterface(QWidget):
         self.switch5.connect(self.goThatDayTask)
         self.switch7.connect(self.searchInTaskManage)
         self.switch9.connect(self.searchInEverydayTask)
+        self.switch11.connect(self.registerAccount)
+        self.switch13.connect(self.loginAccount)
 
     def addTask(self, task_dict):
-        base_op.add_task(task_dict=task_dict)
+        #base_op.add_task(task_dict=task_dict)
         return
 
     def deleteTask(self, task_name):
@@ -53,7 +59,7 @@ class TaskInterface(QWidget):
         self.task_list_test.remove(cur_task)  # 前端测试用，和后端连接后请删除
         '''
         # 后端处理
-        base_op.del_task(task_name=task_name)
+        #base_op.del_task(task_name=task_name)
         newTaskList = self.searchTask({})  # 这个搜索根据后端实现改
         # 以下勿删
         self.switch4.emit(self.searchTask(newTaskList))
@@ -65,7 +71,7 @@ class TaskInterface(QWidget):
             if self.task_list_test[i]['name'] == task_name:
                 self.task_list_test[i] = task_dict
                 break  # 前端测试用，和后端连接后请删除'''
-        base_op.mod_task(task_name=task_dict['name'], task_mod_dict=task_dict)
+        #base_op.mod_task(task_name=task_dict['name'], task_mod_dict=task_dict)
         # 后端处理
         newTaskList = self.searchTask({})  # 这个搜索根据后端实现改
         # 以下勿删
@@ -73,15 +79,16 @@ class TaskInterface(QWidget):
 
     # 用于任务管理
     def searchTask(self, feature_dict):
-        # cur_task_list = self.task_list_test  # 前端测试用，和后端连接后请删除
+        cur_task_list = self.task_list_test  # 前端测试用，和后端连接后请删除
         # 后端处理
-        cur_task_list = base_op.load_specified_subtasks(specify=feature_dict)
+        #cur_task_list = base_op.load_specified_subtasks(specify=feature_dict)
         return cur_task_list
 
     # 用于每日任务
     def searchTaskFromDate(self, date, feature_dict):  # date:QDateTime()
-        feature_dict.update({'date':date})
-        cur_task_list = base_op.load_specified_subtasks(specify=feature_dict)
+        cur_task_list = []
+        feature_dict.update({'date': date})
+        #cur_task_list = base_op.load_specified_subtasks(specify=feature_dict)
         # 后端函数f(date, feature_dict)
         return cur_task_list
 
@@ -99,6 +106,22 @@ class TaskInterface(QWidget):
     def searchInEverydayTask(self, date, feature_dict):
         newTaskList = self.searchTaskFromDate(date, feature_dict)
         self.switch10.emit(newTaskList)
+
+    def registerAccount(self, usrDict):
+        print(usrDict['usr_id'])
+        print(usrDict['pwd'])
+        r = 0
+        #r = base_op.register(usr_id=usrDict['usr_id'], password=usrDict['pwd'])
+        if r < 0:
+            print("register fail")
+
+    def loginAccount(self, usrDict):
+        r = 0
+        #r = base_op.login(usr_id=usrDict['usr_id'], password_in=usrDict['pwd'])
+        if r < 0:
+            print("login fail")
+        else:
+            self.switch14.emit()
 
 
 app = QApplication(sys.argv)
