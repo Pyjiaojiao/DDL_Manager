@@ -388,7 +388,9 @@ def get_task_startTime_and_endTime(usr_id: str, task_name: str) -> tuple:
     curs.execute(
         'create table if not exists "{task_name}"(date date, start_time datetime, end_time datetime, status int)'.format(
             task_name=task_name))
+    curs.execute('select * from "{task_name}"'.format(task_name=task_name))
     ret = curs.fetchall()
+    db_end(conn, curs)
     if len(ret) == 0:
         return None, None
     else:
