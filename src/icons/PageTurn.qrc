@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file>PageTurn_next.png</file>
+
+  </qresource>
+</RCC>

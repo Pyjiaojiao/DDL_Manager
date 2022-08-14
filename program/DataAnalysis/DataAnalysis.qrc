@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/">
+    <file>DataAnalysis_background.png</file>
+    <file>DataAnalysis_search.png</file>
+
+  </qresource>
+</RCC>
+
+

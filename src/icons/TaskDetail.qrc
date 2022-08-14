@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file>TaskDetail_back.png</file>
+    <file>TaskDetail_modify.png</file>
+  </qresource>
+</RCC>

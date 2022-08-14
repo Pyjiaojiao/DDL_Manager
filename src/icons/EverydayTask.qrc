@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/">
+    <file>EverydayTask_cardBackground.png</file>
+    <file>EverydayTask_calendar.png</file>
+
+  </qresource>
+</RCC>
