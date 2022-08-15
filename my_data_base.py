@@ -218,6 +218,7 @@ def get_specified_subtasks(usr_id: str, specify_str_4task: str, specify_str_4sub
             # subtasks_rcd_list.append(subtask_rcd_item)
             ret.append(task_dict)
     db_end(conn, curs)
+    ret.sort(key=lambda e: e['startTime'])  # 小任务按开始时间排序
     return ret
 
 
