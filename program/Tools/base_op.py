@@ -1,4 +1,6 @@
 import datetime
+
+import my_data_analyzer
 import my_data_base
 from hashlib import md5
 import schedule
@@ -19,13 +21,14 @@ from PyQt5.QtCore import QTime, QDateTime
 
 USR_ID = 0  # 当前正在操作用户
 
-TRIVIAL_KEY = {'type', 'detail', 'name'}
-SCHEDULE_KEY = {'is_daily', 'priority', 'time_estimated', 'ddl'}
+NAME_KEY = {'name'}
+TRIVIAL_KEY = {'type', 'detail'}
+SCHEDULE_KEY = {'priority', 'time_estimated', 'start_date', 'ddl'}
 STATUS_KEY = {'status'}
-RANGE_KEY = ['start_date', 'end_date']
 
 QRY_MANAGER_KEY = {'is_daily', 'status', 'type', 'priority'}
 QRY_DATE_KEY = {'date'}
+QRY_RANGE_KEY = {'start_date', 'end_date'}
 
 SUBTASK_STATUS_CODE = {'not_start': 0, 'doing': 1, 'finish': 2, 'time_out': 3,
                        'delete': 4}  # dict{op_str: int} 0 未开始 1 正在做 2 完成 3 过期 4 删除
@@ -45,7 +48,7 @@ def pretreatment(task_dict):
         task_dict["time_estimated"] = datetime.datetime.strptime(str(hour) + ':' + str(minute),
                                                                  "%H:%M")
     if "endDate" in task_dict:
-        task_dict['ddl'] = my_data_converter.QDate2date(task_dict['endDate'])
+        task_dict['end_date'] = task_dict['ddl'] = my_data_converter.QDate2date(task_dict['endDate'])
     # if "startDate" in task_dict:
     #     task_dict["start_time"] = my_data_converter.QDateTime2datetime(task_dict["startTime"])
     #     task_dict['start_date'] = task_dict['start_time'].date()
@@ -75,15 +78,17 @@ def mod_task(usr_id: str = USR_ID, task_name="test", task_start_time: QDateTime 
     # 数据库函数已写，待讨论调用形式
     for key in task_mod_dict:
         if key in SCHEDULE_KEY:
-            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, value=task_mod_dict[key])
+            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, new_val=str(task_mod_dict[key]))
             # TODO: 是否触发调度？
+        elif key in TRIVIAL_KEY:
+            my_data_base.normal_modify(usr_id=usr_id, task_name=task_name, key=key, new_val=str(task_mod_dict[key]))
 
 
 def finish_subtask(usr_id: str = USR_ID, task_name="test", task_start_time: QDateTime = None):
     usr_id = USR_ID
     my_data_base.terminate_subtask(usr_id=usr_id, task_name=task_name,
                                    task_start_time=my_data_converter.QDateTime2datetime(task_start_time),
-                                   terminate_code=2)
+                                   terminate_code=SUBTASK_STATUS_CODE['finish'])
     dt_now = datetime.datetime.now()  # type - datetime
     my_data_base.update_subtasks_status(usr_id, dt_now, task_name)
 
@@ -92,7 +97,7 @@ def delete_subtask(usr_id: str = USR_ID, task_name="test", task_start_time: QDat
     usr_id = USR_ID
     my_data_base.terminate_subtask(usr_id=usr_id, task_name=task_name,
                                    task_start_time=my_data_converter.QDateTime2datetime(task_start_time),
-                                   terminate_code=4)
+                                   terminate_code=SUBTASK_STATUS_CODE['delete'])
 
 
 def re_arrange(usr_id: str = USR_ID):
@@ -166,7 +171,6 @@ def load_specified_subtasks(usr_id: str = USR_ID, specify: dict = {}) -> list:
             my_data_base.get_ongoing_tasks_rcds(usr_id=usr_id, specify_str=specify_str_4task))
         for task in tasks:
             start_time_str, end_time_str = my_data_base.get_task_startTime_and_endTime(usr_id, task['name'])
-            #print("ttttt" + start_time_str + end_time_str)
             task['startTime'] = my_data_converter.datetime_str2QDateTime(start_time_str) if start_time_str else None
             task['endTime'] = my_data_converter.datetime_str2QDateTime(end_time_str) if end_time_str else None
         return tasks
@@ -181,6 +185,12 @@ def _update_all_ongoing_tasks_status(usr_id: str):
     my_data_base.update_all_ongoing_tasks_status(usr_id=usr_id, dt_now=dt_now)
 
 
+def get_analyze_result(usr_id: str = USR_ID, specify: dict = {}) -> dict:
+    pretreatment(task_dict=specify)
+    _update_all_ongoing_tasks_status(usr_id)
+    return my_data_analyzer.get_analyze_result(usr_id, specify)
+
+
 def debug():
     register("admin", '123456')
     if login("admin", '123456') == 0:
@@ -191,8 +201,8 @@ def debug():
                  'isDaily': False,  # bool
                  'startTime': QDateTime(1970, 1, 1, 0, 0),  # QDateTime
                  'endTime': QDateTime(2050, 1, 1, 0, 0),  # QDateTime
-                 'startDate': QDateTime(2022, 8, 14, 0, 0).date(),
-                 'endDate': QDateTime(2022, 8, 14, 0, 0).date(),
+                 'startDate': QDateTime(2022, 8, 15, 0, 0).date(),
+                 'endDate': QDateTime(2022, 8, 15, 0, 0).date(),
                  'costTime': QTime(3, 30),  # QTime
                  'type': "运动",  # str
                  'importance': 0,  # int:[0,4)
@@ -225,6 +235,10 @@ def debug():
     for item in rcd2:
         item.sort(key=lambda e: e['startTime'])
         print([(e['name'], e['startTime'], e['endTime'], e['type']) for e in item])
+    mod_task("admin", "111", QDateTime.fromString('2022-8-15 08:00', "yyyy-MM-dd hh:mm"),
+             {"ddl": datetime.datetime(2022, 8, 21).date()})
+    rcds = load_specified_subtasks({})
+    print(rcds)
 
 
 if __name__ == '__main__':

@@ -85,14 +85,15 @@ class TaskManagementWindow(QWidget):
         for f in self.PageWidget.TaskCardList:
             f.deleteMode = False
         self.deleteMode = 0
-        self.AddAndDeleteWidget.pushButton_2.setText("删除任务")
+        self.AddAndDeleteWidget.pushButton_2.setText("退出删除")
         self.PageWidget.exitDeleteMode()
 
     def searchTask(self):
         self.feature_dict = self.SearchWidget.getFeatureDict()
-        print(self.feature_dict)
+
         from TaskInterface import taskInterface
         taskInterface.switch7.emit(self.feature_dict)
+        self.PageWidget.setPageMode(2)
 
 
 if __name__ == "__main__":

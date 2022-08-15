@@ -47,7 +47,7 @@ class PageWidget(QtWidgets.QWidget):
         self.setupUi()
 
     def setupUi(self):
-
+        # 更新任务卡片
         for i in range(self.PageNum):
             layoutWidget = QtWidgets.QWidget()
             layoutWidget.setFixedSize(1040, 560)
@@ -64,7 +64,7 @@ class PageWidget(QtWidgets.QWidget):
                 f = myTaskCard()
                 f.updateTask(curTasks[j])
                 self.TaskCardList.append(f)
-                f.changeDeleteMode(self.deleteMode)
+                # f.changeDeleteMode(self.deleteMode)
                 layout.addWidget(f, j // 3, j % 3)
             if len(curTasks) == 2:
                 f = myTaskCard()
@@ -80,13 +80,6 @@ class PageWidget(QtWidgets.QWidget):
         self.frame_3 = QtWidgets.QFrame(self)
         self.baseLayout.addWidget(self.frame_3)
         self.frame_3.setGeometry(QtCore.QRect(120, 560, 800, 60))
-
-        # sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        # sizePolicy.setHorizontalStretch(0)
-        # sizePolicy.setVerticalStretch(0)
-        # sizePolicy.setHeightForWidth(self.frame_3.sizePolicy().hasHeightForWidth())
-        # self.frame_3.setSizePolicy(sizePolicy)
-
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")

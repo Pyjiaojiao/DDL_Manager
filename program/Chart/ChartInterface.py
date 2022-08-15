@@ -3,6 +3,7 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import QDateTime
 from PyQt5.QtWidgets import QApplication, QWidget
+from Tools import base_op
 
 
 class ChartInterface(QWidget):
@@ -42,6 +43,7 @@ class ChartInterface(QWidget):
     # date_dict={startDate:QDate, endDate:QDate}
     def searchChartData(self, date_dict):
         chart_dict = {}
+        chart_dict = base_op.get_analyze_result(specify=date_dict)
         self.switch2.emit(chart_dict)
         return
 

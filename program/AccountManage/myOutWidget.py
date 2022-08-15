@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
+
 class OutWidget(QWidget):
     def __init__(self):
         super(OutWidget, self).__init__()
@@ -20,15 +21,16 @@ class OutWidget(QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("background-color: rgb(53, 55, 100);\n"
-                                      "border-radius:15px;\n"
-                                      "color: rgb(255, 255, 255);")
+        self.pushButton.setStyleSheet("QPushButton{background-color:rgb(53, 55, 100)}"
+                                      "QPushButton{color: rgb(255, 255, 255)}"
+                                      "QPushButton{border-radius:15px}"
+                                      "QPushButton:hover{background-color:rgb(79, 82, 149)}"
+                                      "QPushButton:pressed{background-color:rgb(79, 82, 149)}")
         self.pushButton.setObjectName("pushButton")
 
         self.retranslateUi(self)
         self.setWindowFlag(Qt.FramelessWindowHint)
         QtCore.QMetaObject.connectSlotsByName(self)
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

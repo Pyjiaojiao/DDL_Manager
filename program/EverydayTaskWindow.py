@@ -57,7 +57,7 @@ class EveryDayTaskWindow(QtWidgets.QWidget):
         self.layout2.addWidget(self.PageWidget)
         for f in self.PageWidget.TaskCardList:
             f.pushButton_2.setVisible(True)
-            f.taskDetailWidget.setVisible(False)
+            f.taskDetailWidget.setVisible(True)
             f.pageMode = 1
         self.baseLayout.addWidget(self.layout2_widget, 1, 0, 8, 1)
 

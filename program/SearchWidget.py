@@ -24,9 +24,14 @@ class mySearchWidget(QWidget):
         sizePolicy.setHeightForWidth(self.searchButton.sizePolicy().hasHeightForWidth())
         self.searchButton.setSizePolicy(sizePolicy)
 
-        self.searchButton.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                        "image: url(:/TaskManagement_search.png);\n"
-                                        "")
+        self.searchButton.setStyleSheet("QPushButton{background-color:rgb(255, 255, 255)}"
+                                        "QPushButton{image:url(:/TaskManagement_search.png)}"
+                                        "QPushButton{border-radius:5px}"
+                                        "QPushButton:hover{border:2px solid rgba(0, 0, 0)}"
+                                        "QPushButton:hover{background-color:rgb(255, 255, 255)}"
+                                        "QPushButton:pressed{border:2px solid rgba(0, 0, 0)}"
+                                        "QPushButton:pressed{background-color:rgb(255, 255, 255)}"
+                                        )
         self.searchButton.setText("")
         self.searchButton.setObjectName("selfButton")
         self.searchButton.raise_()
@@ -44,8 +49,12 @@ class mySearchWidget(QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.allButton.setFont(font)
-        self.allButton.setStyleSheet("background-color:rgb(255, 255, 255);\n"
-                                     "border-radius:5px")
+        self.allButton.setStyleSheet("QPushButton{background-color:rgb(255, 255, 255)}"
+                                     "QPushButton{border-radius:5px}"
+                                     "QPushButton:hover{border:2px solid rgba(0, 0, 0)}"
+                                     "QPushButton:hover{background-color:rgb(255, 255, 255)}"
+                                     "QPushButton:pressed{border:2px solid rgba(0, 0, 0)}"
+                                     "QPushButton:pressed{background-color:rgb(255, 255, 255)}")
         self.allButton.setObjectName("allButton")
         # 设置三个选择按钮
         self.comboBox = QtWidgets.QComboBox(self)
@@ -108,6 +117,8 @@ class mySearchWidget(QWidget):
         self.comboBox_3.addItem("")
         # 是否日常
         self.checkBox = QtWidgets.QCheckBox(self)
+        self.checkBox.setTristate(True)
+        self.checkBox.setCheckState(QtCore.Qt.PartiallyChecked)
         self.checkBox.setGeometry(QtCore.QRect(620, 15, 105, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -148,16 +159,18 @@ class mySearchWidget(QWidget):
         self.comboBox_2.setItemText(4, _translate("Form", "娱乐"))
         self.comboBox_2.setItemText(5, _translate("Form", "其他"))
         self.comboBox_3.setItemText(0, _translate("Form", "选择重要性"))
-        self.comboBox_3.setItemText(1, _translate("Form", "非常重要"))
-        self.comboBox_3.setItemText(2, _translate("Form", "重要"))
-        self.comboBox_3.setItemText(3, _translate("Form", "一般"))
-        self.comboBox_3.setItemText(4, _translate("Form", "不重要"))
+        self.comboBox_3.setItemText(4, _translate("Form", "非常重要"))
+        self.comboBox_3.setItemText(3, _translate("Form", "重要"))
+        self.comboBox_3.setItemText(2, _translate("Form", "一般"))
+        self.comboBox_3.setItemText(1, _translate("Form", "不重要"))
         self.checkBox.setText(_translate("Form", "日常任务"))
 
     def getFeatureDict(self):
-        feature_dict = {
-            'isDaily': self.checkBox.isChecked()
-        }
+        feature_dict = {}
+        if self.checkBox.checkState() == QtCore.Qt.Checked:  # 选中是日常任务，不选中非日常任务，半选中均有
+            feature_dict.update({'isDaily': True})
+        elif self.checkBox.checkState() == QtCore.Qt.Unchecked:
+            feature_dict.update({'isDaily': False})
         if self.comboBox_2.currentIndex() != 0:
             # print("now type is " + self.comboBox_2.currentIndex().__str__())
             typeList = ["学习", "工作", "运动", "娱乐", "其他"]

@@ -45,9 +45,12 @@ class myCardsWidget(QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                      "border-radius:5px;\n"
-                                      "border:2px solid rgb(236, 179, 153)")
+        self.pushButton.setStyleSheet(".QPushButton{background-color:rgb(255, 255, 255)}"
+                                      ".QPushButton{border-radius:5px}"
+                                      ".QPushButton:hover{border:2px solid rgba(0, 0, 0)}"
+                                      ".QPushButton:hover{background-color:rgb(255, 255, 255)}"
+                                      ".QPushButton:pressed{border:2px solid rgba(0, 0, 0)}"
+                                      ".QPushButton:pressed{background-color:rgb(255, 255, 255)}")
         self.pushButton.setObjectName("pushButton")
         self.label = QtWidgets.QLabel(self.widget_2)
         self.label.setGeometry(QtCore.QRect(190, 10, 130, 30))
@@ -114,8 +117,13 @@ class myCardsWidget(QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
         self.pushButton_2.setSizePolicy(sizePolicy)
-        self.pushButton_2.setStyleSheet("background-image: url(:/DataAnalysis_search.png);\n"
-                                        "background-color: rgb(255, 255, 255);")
+        self.pushButton_2.setStyleSheet(".QPushButton{image: url(:/DataAnalysis_search.png)}"
+                                        ".QPushButton{background-color: rgb(255, 255, 255)}"
+                                        ".QPushButton:hover{border:2px solid rgba(0, 0, 0)}"
+                                        ".QPushButton:hover{background-color:rgb(255, 255, 255)}"
+                                        ".QPushButton:pressed{border:2px solid rgba(0, 0, 0)}"
+                                        ".QPushButton:pressed{background-color:rgb(255, 255, 255)}"
+                                        )
         self.pushButton_2.setText("")
         self.pushButton_2.setObjectName("pushButton_2")
         # 任务总数
@@ -313,14 +321,21 @@ class myCardsWidget(QWidget):
 
     def changeAllTimeMode(self):
         if self.allDateMode:
-            self.pushButton.setStyleSheet("background-color: rgb(236, 179, 153);\n"
-                                          "border-radius:5px;\n"
-                                          "border:2px solid rgb(236, 179, 153)")
+            self.pushButton.setStyleSheet(".QPushButton{background-color:rgb(236, 179, 153)}"
+                                          ".QPushButton{border-radius:5px}"
+                                          ".QPushButton:hover{border:2px solid rgba(0, 0, 0)}"
+                                          ".QPushButton:hover{background-color:rgb(255, 255, 255)}"
+                                          ".QPushButton:pressed{border:2px solid rgba(0, 0, 0)}"
+                                          ".QPushButton:pressed{background-color:rgb(255, 255, 255)}"
+                                          )
             self.allDateMode = False
         else:
-            self.pushButton.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                                          "border-radius:5px;\n"
-                                          "border:2px solid rgb(236, 179, 153)")
+            self.pushButton.setStyleSheet(".QPushButton{background-color:rgb(255, 255, 255)}"
+                                          ".QPushButton{border-radius:5px}"
+                                          ".QPushButton:hover{border:2px solid rgba(0, 0, 0)}"
+                                          ".QPushButton:hover{background-color:rgb(255, 255, 255)}"
+                                          ".QPushButton:pressed{border:2px solid rgba(0, 0, 0)}"
+                                          ".QPushButton:pressed{background-color:rgb(255, 255, 255)}")
             self.allDateMode = True
 
     def searchDataFromDate(self):
@@ -345,3 +360,5 @@ if __name__ == "__main__":
     w.updateStatusPieChart([(0, 3), (1, 4), (2, 5), (3, 1)])
     w.updateTypePieChart([("学习", 4), ("运动", 5), ("娱乐", 6), ("工作", 3), ("其他", 4)])
     sys.exit(app.exec_())
+
+import src.images.DataAnalysis_rc

@@ -30,6 +30,11 @@ def record2ongoing_task_dict(rcd) -> dict:
                 'type': rcd[7],
                 'startDate': date_str2QDateTime(rcd[8]).date(),  # 这是用户输入的开始日期
                 'status': int(rcd[9])}  # 因为是从ongoing_task表中找的，所以肯定是正在进行(0) 由于需求变化，前面那句作废
+    time_estimated_dt = datetime_str2datetime(rcd[3])
+    time_abd_dt = datetime_str2datetime(rcd[4])
+    cost_time_dt = time_estimated_dt - time_abd_dt + _base_datetime # type datetime
+    cost_time = datetime_str2QDateTime(datetime.strftime(cost_time_dt, "%Y-%m-%d %H:%M:%S")).time()
+    ret_dict['costTime'] = cost_time
     return ret_dict
 
 
@@ -82,6 +87,8 @@ def subtask2record(subtask: Task, subtask_status: int) -> list:
 
 
 def QDateTime2datetime(qdt: QDateTime) -> datetime:
+    print("qdt is ")
+    print(qdt)
     qdt_str = qdt.toString("yyyy-MM-dd hh:mm")
     return datetime.strptime(qdt_str, "%Y-%m-%d %H:%M")
 
@@ -105,3 +112,7 @@ def date_str2QDateTime(d_str: 'date_str') -> QDateTime:
 
 def date_str2QDate(d_str: 'date_str') -> QDate:
     return date_str2QDateTime(d_str).date()
+
+
+def date_str2date(d_str: str) -> datetime.date:
+    return datetime.strptime(d_str, "%Y-%m-%d")
