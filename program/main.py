@@ -139,6 +139,7 @@ class Login(QMainWindow, loginUi):
 class Controller:
     def __init__(self):
         self.login = Login()
+        self.main = None
         self.login.setWindowTitle("Login")
 
     def login_success(self):
@@ -149,6 +150,8 @@ class Controller:
     def showLogin(self):
         taskInterface.switch14.connect(self.showMain)
         self.login.show()
+        if self.main is not None:
+            self.main.close()
 
     def showMain(self):
         self.login_success()

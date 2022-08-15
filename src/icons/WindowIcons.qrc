@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="windowicons">
+    <file>addNewTask.png</file>
+    <file>loginSign.png</file>
+    <file>MainPage.png</file>
+    <file>TaskDetail.png</file>
+  </qresource>
+</RCC>
