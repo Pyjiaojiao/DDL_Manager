@@ -49,7 +49,7 @@ def dict2list_with_hour_steps(ret: dict, key: str, hour_steps: list, hour_step: 
 
 
 def ret_dict_reorganize(ret: dict):
-    ret['curTaskFinishRate'] = ret['curTaskFinishCount'] / ret['curTaskCount']
+    ret['curTaskFinishRate'] = ret['curTaskFinishCount'] / ret['curTaskCount'] if ret['curTaskCount'] != 0 else 0
     dict2list_with_hour_steps(ret, 'timeEstimatedList', HOUR_STEPS_TE, HOUR_STEP_TE)
     # 在更新接下来要更新的结构前，先利用之做计算
     for key in ret['taskTimeDistributeInOneDay']:
