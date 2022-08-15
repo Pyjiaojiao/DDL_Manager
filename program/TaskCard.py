@@ -64,16 +64,16 @@ class myTaskCard(QtWidgets.QWidget):
         self.checkBox.setObjectName("checkBox")
         if self.finishMode == 1:
             self.checkBox.setText("是否完成")
-            self.checkBox.setStyleSheet("QPushButton:hover{background-color: rgb(47, 75, 51)}"
+            self.checkBox.setStyleSheet("QPushButton:hover{background-color: rgb(84, 55, 173)}"
                                         "QPushButton:hover{color: rgb(255, 255, 255)}"
                                         "QPushButton:hover{border-radius:10px}"
-                                        "QPushButton:pressed{background-color: rgb(47, 75, 51)}"
+                                        "QPushButton:pressed{background-color: rgb(84, 55, 173)}"
                                         "QPushButton:pressed{color: rgb(255, 255, 255)}"
                                         "QPushButton:pressed{border-radius:10px}"
                                         "QPushButton{background-color: rgb(255, 255, 255)}"
-                                        "QPushButton{color: rgb(47, 75, 51)}"
+                                        "QPushButton{color: rgb(84, 55, 173)}"
                                         "QPushButton{border-radius:10px}"
-                                        "QPushButton{border:2px solid rgba(47, 75, 51)}")
+                                        "QPushButton{border:2px solid rgb(84, 55, 173)}")
         else:
             self.checkBox.setText("已完成")
             self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"

@@ -137,6 +137,19 @@ def login(usr_id: str, password_in: str) -> 'Finish Code':
     return 0
 
 
+# 改密码。需要登录后调用。需要传入新密码原文。
+def update_password(new_password: str, usr_id: str = USR_ID):
+    usr_id = USR_ID
+    password_encrypted = encrypt_usr_password(new_password)
+    my_data_base.usr_update_password(usr_id, password_encrypted)
+
+
+# 更新用户个人资料。需要登录后调用。profile_dict应该包含 "nickname"、"gender"、"region"、"signature"。账号（usr_id）不可更改。
+def update_profile(usr_id: str = USR_ID, profile_dict: dict = {}):
+    usr_id = USR_ID
+
+
+
 # 从db恢复已保存的全部子任务，返回列表，按date, start_time排序
 def load_all_subtasks(usr_id: str = USR_ID) -> list:
     usr_id = USR_ID

@@ -80,7 +80,7 @@ class Day(object):
             i = task.end_time  # TODO: 留出休息时间
             # 构造休息时间
             task_last_sec = (task.end_time - task.start_time).total_seconds()
-            break_sec = int(total_break_time_sec * (task_last_sec // total_working_time_sec))
+            break_sec = int(total_break_time_sec * (task_last_sec / total_working_time_sec))
             i = Day.datetime_add_time(i, Day.seconds2time(break_sec))
 
     @staticmethod

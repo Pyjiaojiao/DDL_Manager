@@ -77,7 +77,7 @@ def ret_dict_init() -> dict:
         # 'totalTaskCount': 0,
         # 'totalTaskFinishRate': 0,
         # 以下字段均针对“指定的startDate和endDate之间”
-        'curOriginTaskCount': 0,
+        'curOriginalTaskCount': 0,
         'curTaskCount': 0,
         'curTaskFinishCount': 0,
         'curTaskFinishRate': 0,
@@ -88,7 +88,7 @@ def ret_dict_init() -> dict:
         'taskFinishmentList': {},
         'taskTimeDistributeInOneDay': {},
         'taskFinishRateInOneDay': {},
-        'taskFinishCountInOneDay':{}
+        'taskFinishCountInOneDay': {}
     }
     return ret
 
@@ -119,7 +119,7 @@ def analyze_ongoing_tasks(usr_id: str, specify: dict, ret: dict):
         # 任务起止日期与传入起止日期比较, 不相交的直接跳过
         if not date_ranges_intersect((task_start_date, task_end_date), (specify['start_date'], specify['end_date'])):
             continue
-        ret['curOriginTaskCount'] += 1
+        ret['curOriginalTaskCount'] += 1
         task_type = rcd[7]
         ret['taskTypeList'][task_type] = 1 \
             if task_type not in ret['taskTypeList'] else 1 + ret['taskTypeList'][task_type]

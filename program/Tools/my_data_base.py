@@ -174,9 +174,6 @@ def clear_scheduled_subtasks(usr_id):
             curs.execute('delete from "{table_name}" where status != "{finish_code}"'.
                          format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish']))
         else:
-            curs.execute(
-                '''create table if not exists "{table_name}"
-                (date date, start_time datetime, end_time datetime, status int)'''.format(table_name=task_name))
             curs.execute('delete from "{table_name}" where status != "{finish_code}" and status != "{time_out_code}"'
                          .format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish'],
                                  time_out_code=SUBTASK_STATUS_CODE['time_out']))
@@ -446,6 +443,15 @@ def usr_update_password(usr_id: str, encrypted_password: str):
     curs.execute('delete from PASS_WORD')
     curs.execute('insert into PASS_WORD values(?)', [encrypted_password])
     db_end(conn, curs)
+
+
+def usr_update_profile(usr_id: str, profile_dict: dict = {}):
+    conn, curs = db_start(usr_id)
+    tbl_drp = 'drop table if exists USR_PROFILE'
+    curs.execute(tbl_drp)
+    tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
+
+
 
 
 def usr_register(usr_id: str, encrypted_password: str):

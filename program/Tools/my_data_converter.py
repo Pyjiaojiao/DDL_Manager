@@ -33,6 +33,7 @@ def record2ongoing_task_dict(rcd) -> dict:
     time_estimated_dt = datetime_str2datetime(rcd[3])
     time_abd_dt = datetime_str2datetime(rcd[4])
     cost_time_dt = time_estimated_dt - time_abd_dt + _base_datetime # type datetime
+    print("time_es:",time_estimated_dt, "time_abd:",time_abd_dt, "costTime:", cost_time_dt)
     cost_time = datetime_str2QDateTime(datetime.strftime(cost_time_dt, "%Y-%m-%d %H:%M:%S")).time()
     ret_dict['costTime'] = cost_time
     return ret_dict
@@ -65,6 +66,7 @@ def subtask_record_and_task_dict2subtask_dict(rcd, task_dict) -> dict:
     task_dict['date'] = date_str2QDate(rcd[0])
     task_dict['startTime'] = datetime_str2QDateTime(rcd[1])
     task_dict['endTime'] = datetime_str2QDateTime(rcd[2])
+    task_dict['status'] = int(rcd[3])
     return task_dict
 
 

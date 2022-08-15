@@ -144,7 +144,7 @@ class NewTaskDialog(QWidget):
                                         "")
         self.dateEdit.setCalendarPopup(True)
         self.dateEdit.setObjectName("dateEdit")
-        self.dateEdit.setDate(QtCore.QDate.currentDate())
+        self.dateEdit.setDate(QtCore.QDate.currentDate().addDays(1))
 
 
         self.label.setGeometry(QtCore.QRect(70, 190, 150, 30))
@@ -185,7 +185,7 @@ class NewTaskDialog(QWidget):
         font.setBold(False)
         self.dateEdit_2.setFont(font)
         self.dateEdit_2.setObjectName("dateEdit_2")
-        self.dateEdit_2.setDate(QtCore.QDate.currentDate())
+        self.dateEdit_2.setDate(QtCore.QDate.currentDate().addDays(1))
 
         self.comboBox.setGeometry(QtCore.QRect(230, 310, 150, 30))
         font = QtGui.QFont()
