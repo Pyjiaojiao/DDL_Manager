@@ -114,7 +114,7 @@ class MainWindow(QMainWindow, mainUi):
 
     def finishTaskFromDate(self, date):
         self.leftTabWidget.everyDayTaskWidget.updateDate(date)
-        self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
+        #self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
 
     def updateDataAnalysis(self, chart_dict):
         print("main")

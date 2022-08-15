@@ -236,11 +236,7 @@ class myTaskCard(QtWidgets.QWidget):
         if self.pageMode == 1:
             print(self.taskDict)
             taskInterface.switch3_.emit(str(self.taskDict['name']), self.taskDict['startTime'])
-            self.checkBox.setEnabled(False)
-            self.checkBox.setText("已完成")
-            self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"
-                                        "QPushButton{border-radius:10px}"
-                                        "QPushButton{border:2px solid rgba(47, 75, 51)}")
+
         elif self.pageMode == 2:
             print("pre delete" + str(self.taskDict['name']))
             taskInterface.switch3.emit(str(self.taskDict['name']))
@@ -285,6 +281,11 @@ class myTaskCard(QtWidgets.QWidget):
             if self.pageMode == 1:
                 date = QtCore.QDate.fromString(self.taskDict['startTime'].toString("yyyy/MM/dd"), "yyyy/MM/dd")
                 self.checkBox.setEnabled(False)
+                self.finishMode = 2
+                self.checkBox.setText("已完成")
+                self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"
+                                            "QPushButton{border-radius:10px}"
+                                            "QPushButton{border:2px solid rgba(47, 75, 51)}")
                 taskInterface.switch17.emit(date, self.taskDict)  # everyDayTask
             elif self.pageMode == 2:
                 self.checkBox.setEnabled(False)
