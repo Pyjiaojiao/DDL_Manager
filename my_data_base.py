@@ -175,6 +175,9 @@ def clear_scheduled_subtasks(usr_id):
             curs.execute('delete from "{table_name}" where status != "{finish_code}"'.
                          format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish']))
         else:
+            curs.execute(
+                '''create table if not exists "{table_name}"
+                (date date, start_time datetime, end_time datetime, status int)'''.format(table_name=task_name))
             curs.execute('delete from "{table_name}" where status != "{finish_code}" and status != "{time_out_code}"'
                          .format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish'],
                                  time_out_code=SUBTASK_STATUS_CODE['time_out']))
