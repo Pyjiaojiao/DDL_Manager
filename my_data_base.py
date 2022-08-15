@@ -445,13 +445,28 @@ def usr_update_password(usr_id: str, encrypted_password: str):
     db_end(conn, curs)
 
 
-def usr_update_profile(usr_id: str, profile_dict: dict = {}):
+def usr_update_profile(usr_id: str, p_dict: dict = {}):
     conn, curs = db_start(usr_id)
     tbl_drp = 'drop table if exists USR_PROFILE'
     curs.execute(tbl_drp)
     tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
+    curs.execute(tbl_crt)
+    tbl_ins = 'insert into USR_PROFILE(?, ?, ?, ?)'
+    curs.execute(tbl_ins, [p_dict['nickname'], p_dict['gender'], p_dict['region'], p_dict['signature']])
+    db_end(conn, curs)
 
 
+def usr_get_profile(usr_id: str) -> dict:
+    conn, curs = db_start(usr_id)
+    tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
+    curs.execute(tbl_crt)
+    curs.execute('select * from USR_PROFILE')
+    profile_rcd = curs.fetchall()
+    p_dict = {'nickname': profile_rcd[0],
+              'gender': profile_rcd[1],
+              'region': profile_rcd[2],
+              'signature': profile_rcd[3]}
+    return p_dict
 
 
 def usr_register(usr_id: str, encrypted_password: str):
