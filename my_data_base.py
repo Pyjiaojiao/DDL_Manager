@@ -456,7 +456,7 @@ def usr_update_profile(usr_id: str, p_dict: dict = {}):
     curs.execute(tbl_drp)
     tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
     curs.execute(tbl_crt)
-    tbl_ins = 'insert into USR_PROFILE(?, ?, ?, ?)'
+    tbl_ins = 'insert into USR_PROFILE values(?, ?, ?, ?)'
     curs.execute(tbl_ins, [p_dict['nickname'], p_dict['gender'], p_dict['region'], p_dict['signature']])
     db_end(conn, curs)
 
