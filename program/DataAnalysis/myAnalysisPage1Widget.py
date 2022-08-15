@@ -346,8 +346,8 @@ class myCardsWidget(QWidget):
             self.startDate = QDate(1970, 1, 1)
             self.endDate = QDate(2050, 1, 1)
         else:
-            self.startDate = self.dateEdit_2.date()
-            self.endDate = self.dateEdit_3.date()
+            self.startDate = self.dateEdit_3.date()
+            self.endDate = self.dateEdit_2.date()
         print(self.startDate, self.endDate)
         chartInterface.switch1.emit({'startDate': self.startDate,
                                      'endDate': self.endDate})

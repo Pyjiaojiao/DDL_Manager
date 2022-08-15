@@ -37,7 +37,7 @@ class AccountManageWindow(QWidget) :
         self.baseLayout = QtWidgets.QGridLayout(self, spacing=0)
         self.baseLayout.setContentsMargins(50, 50, 50, 50)
 
-        self.modWindow = modifyPasswordWindow()
+       # self.modWindow = modifyPasswordWindow()
 
         self.setupUi()
 
@@ -74,7 +74,7 @@ class AccountManageWindow(QWidget) :
 
         self.baseLayout.addWidget(self.layout2_widget, 0, 1)
 
-        self.PassportWidget.pushButton_2.connect(self.modWindowShow)
+        #self.PassportWidget.pushButton_2.connect(self.modWindowShow)
 
         self.retranslateUi()
 
