@@ -144,12 +144,13 @@ class Controller:
         self.login = Login()
         self.main = None
         self.login.setWindowTitle("Login")
-        self.login.setWindowIcon(QIcon(":/loginSign.png"))
+        self.login.setWindowIcon(QIcon(":/LoginSign.png"))
 
     def login_success(self):
         self.main = MainWindow()
         self.main.setWindowTitle("DDL Manager")
         self.main.setWindowIcon(QIcon(":/MainPage.png"))
+
 
     def showLogin(self):
         taskInterface.switch14.connect(self.showMain)
@@ -171,3 +172,4 @@ if __name__ == '__main__':
     sys.exit(app.exec_())  # 在主线程中退出
 
 import src.icons.WindowIcons_rc
+import src.images.DataAnalysis_rc

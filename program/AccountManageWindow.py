@@ -66,13 +66,12 @@ class AccountManageWindow(QWidget) :
 
         self.baseLayout.addWidget(self.layout2_widget, 0, 1)
 
-        self.retranslateUi(self)
+        self.retranslateUi()
+
         # QtCore.QMetaObject.connectSlotsByName(self)
 
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        # self.pushButton.setText(_translate("MainWindow", "添加任务"))
-        # self.pushButton_2.setText(_translate("MainWindow", "删除任务"))
 
 import src.images.AccountManagement_rc
 

@@ -178,6 +178,19 @@ class EmailWidget(QWidget):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
+    '''usr_dict = {
+        'id': str,
+        'name': str,
+        'gender': str,
+        'zone': str,
+        'signature': str,
+    }'''
+    def updateInformation(self, usr_dict):
+        self.lineEdit.setText("1")
+        self.lineEdit_2.setText("2")
+        self.lineEdit_3.setText("3")
+        self.lineEdit_4.setText("4")
+        self.textEdit.setText("5")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

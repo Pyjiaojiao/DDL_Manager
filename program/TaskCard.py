@@ -25,6 +25,7 @@ class myTaskCard(QtWidgets.QWidget):
                          'detail': None}
         self.taskDetailWidget = myTaskDetailWidget()
         self.pageMode = 1  # 1: 每日任务 2:任务管理
+        self.finishMode = 1  # 1: 未完成 2: 已完成
         self.setupUi()
 
     def setupUi(self):
@@ -47,7 +48,7 @@ class myTaskCard(QtWidgets.QWidget):
                                   "")
         self.widget.setObjectName("widget")
 
-        self.checkBox = QtWidgets.QCheckBox(self.widget)
+        self.checkBox = QtWidgets.QPushButton(self.widget)
         self.checkBox.setGeometry(QtCore.QRect(170, 230, 105, 25))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -61,6 +62,23 @@ class myTaskCard(QtWidgets.QWidget):
         self.checkBox.setFont(font)
         self.checkBox.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.checkBox.setObjectName("checkBox")
+        if self.finishMode == 1:
+            self.checkBox.setText("是否完成")
+            self.checkBox.setStyleSheet("QPushButton:hover{background-color: rgb(47, 75, 51)}"
+                                        "QPushButton:hover{color: rgb(255, 255, 255)}"
+                                        "QPushButton:hover{border-radius:10px}"
+                                        "QPushButton:pressed{background-color: rgb(47, 75, 51)}"
+                                        "QPushButton:pressed{color: rgb(255, 255, 255)}"
+                                        "QPushButton:pressed{border-radius:10px}"
+                                        "QPushButton{background-color: rgb(255, 255, 255)}"
+                                        "QPushButton{color: rgb(47, 75, 51)}"
+                                        "QPushButton{border-radius:10px}"
+                                        "QPushButton{border:2px solid rgba(47, 75, 51)}")
+        else:
+            self.checkBox.setText("已完成")
+            self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"
+                                        "QPushButton{border-radius:10px}"
+                                        "QPushButton{border:2px solid rgba(47, 75, 51)}")
 
         self.label = QtWidgets.QLabel(self.widget)
         self.label.setGeometry(QtCore.QRect(30, 50, 100, 30))
@@ -172,12 +190,11 @@ class myTaskCard(QtWidgets.QWidget):
         self.pushButton_2.clicked.connect(self.deleteTask)
         self.taskDetailWidget.modifyButton.clicked.connect(self.rewriteTask)
         self.taskDetailWidget.modifyButton.clicked.connect(self.taskDetailWidget.close)
-        self.checkBox.stateChanged.connect(self.finishTask)
+        self.checkBox.clicked.connect(self.finishTask)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.checkBox.setText(_translate("MainWindow", "是否完成"))
         self.label.setText(_translate("MainWindow", "任务名称："))
         self.label_2.setText(_translate("MainWindow", "截止日期："))
         self.label_4.setText(_translate("MainWindow", "TextLabel"))
@@ -195,9 +212,12 @@ class myTaskCard(QtWidgets.QWidget):
             self.label_6.setText(self.taskDict['endDate'].toString(QtCore.Qt.DefaultLocaleShortDate))
             print('status is ')
             print(self.taskDict['status'])
-            self.checkBox.setChecked(self.taskDict['status'] > 1)
             if self.taskDict['status'] > 1:
                 self.checkBox.setEnabled(False)
+                self.checkBox.setText("已完成")
+                self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"
+                                            "QPushButton{border-radius:10px}"
+                                            "QPushButton{border:2px solid rgba(47, 75, 51)}")
             self.progressBar.setProperty("value", self.calStatusDegree())
             # if self.pageMode == 1:
             self.taskDetailWidget.updateTask(task_dict)
@@ -216,6 +236,11 @@ class myTaskCard(QtWidgets.QWidget):
         if self.pageMode == 1:
             print(self.taskDict)
             taskInterface.switch3_.emit(str(self.taskDict['name']), self.taskDict['startTime'])
+            self.checkBox.setEnabled(False)
+            self.checkBox.setText("已完成")
+            self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"
+                                        "QPushButton{border-radius:10px}"
+                                        "QPushButton{border:2px solid rgba(47, 75, 51)}")
         elif self.pageMode == 2:
             print("pre delete" + str(self.taskDict['name']))
             taskInterface.switch3.emit(str(self.taskDict['name']))
@@ -250,12 +275,12 @@ class myTaskCard(QtWidgets.QWidget):
         shortDict = {'name': task_dict['name']}
         for key in self.taskDict:
             if key in task_dict and self.taskDict[key] != task_dict[key]:
-                    #and key != 'endTime' and key != 'startTime':
+                # and key != 'endTime' and key != 'startTime':
                 shortDict.update({key: task_dict[key]})
         return shortDict
 
     def finishTask(self):
-        if self.checkBox.isChecked():
+        if self.finishMode == 1:
             self.taskDict['status'] = 2
             if self.pageMode == 1:
                 date = QtCore.QDate.fromString(self.taskDict['startTime'].toString("yyyy/MM/dd"), "yyyy/MM/dd")
