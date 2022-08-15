@@ -39,6 +39,7 @@ class MainWindow(QMainWindow, mainUi):
         taskInterface.switch10.connect(self.searchInEverydayTask)
         taskInterface.switch18.connect(self.finishTaskFromDate)
         taskInterface.switch20.connect(self.updateDataAnalysis)
+        taskInterface.switch22.connect(self.updateUsrInfo)
 
     def goLogin(self):
         self.switch2.emit()
@@ -65,13 +66,13 @@ class MainWindow(QMainWindow, mainUi):
                     'importance': importance,  # int 从0开始数字越大越重要，最重要为3
                     'status': status,  # int 从0开始数字越大完成度越高，最高为3
                     'detail': detail}  # str
-        print("inputTaskDict:"+ taskDict.__str__())
+        print("inputTaskDict:" + taskDict.__str__())
         taskInterface.addTask(taskDict)
         self.leftTabWidget.taskManageWidget.searchTask()
         self.leftTabWidget.taskManageWidget.PageWidget.setPageMode(2)
         self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
-        #self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate(self.leftTabWidget.everyDayTaskWidget.date)
-        #self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(newTaskList)  # 添加任务结束，一定回到任务管理页面
+        # self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate(self.leftTabWidget.everyDayTaskWidget.date)
+        # self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(newTaskList)  # 添加任务结束，一定回到任务管理页面
         '''
         # 修好每日任务后解除注释吧！
         newTaskList = self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
@@ -81,20 +82,20 @@ class MainWindow(QMainWindow, mainUi):
         self.newtask.close()
 
     def deleteTask(self):
-        #newTaskList = taskInterface.searchTask({})
-        #self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(newTaskList)
+        # newTaskList = taskInterface.searchTask({})
+        # self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(newTaskList)
         self.leftTabWidget.taskManageWidget.searchTask()
         self.leftTabWidget.taskManageWidget.PageWidget.setPageMode(2)
 
     def deleteTaskFromDate(self, date):
-        #newTaskList = taskInterface.searchTaskFromDate(date, {})
-        #self.leftTabWidget.everyDayTaskWidget.PageWidget.updateTaskList(newTaskList)
+        # newTaskList = taskInterface.searchTaskFromDate(date, {})
+        # self.leftTabWidget.everyDayTaskWidget.PageWidget.updateTaskList(newTaskList)
         self.leftTabWidget.everyDayTaskWidget.updateDate(date)
         self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
 
     def reWriteTask(self):
         self.leftTabWidget.taskManageWidget.searchTask()
-        #self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(task_list)
+        # self.leftTabWidget.taskManageWidget.PageWidget.updateTaskList(task_list)
         self.leftTabWidget.taskManageWidget.PageWidget.setPageMode(2)
 
     def goThatDayTask(self, task_list, date):
@@ -114,13 +115,16 @@ class MainWindow(QMainWindow, mainUi):
 
     def finishTaskFromDate(self, date):
         self.leftTabWidget.everyDayTaskWidget.updateDate(date)
-        #self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
+        # self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
 
     def updateDataAnalysis(self, chart_dict):
         print("main")
-        #print(chart_dict)
+        # print(chart_dict)
         self.leftTabWidget.dataAnalysisWidget.dataPageWidget.updateDateAnalysis(chart_dict)
 
+    def updateUsrInfo(self):
+        self.leftTabWidget.accountManageWidget.\
+            BasicInformationWidget.updateInformation(taskInterface.getUsrInfo())
 
 
 class Login(QMainWindow, loginUi):
@@ -150,7 +154,6 @@ class Controller:
         self.main = MainWindow()
         self.main.setWindowTitle("DDL Manager")
         self.main.setWindowIcon(QIcon(":/MainPage.png"))
-
 
     def showLogin(self):
         taskInterface.switch14.connect(self.showMain)

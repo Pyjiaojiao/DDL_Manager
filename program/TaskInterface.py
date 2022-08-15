@@ -29,6 +29,8 @@ class TaskInterface(QWidget):
     switch18 = QtCore.pyqtSignal(QtCore.QDate)  # finish date task:taskInterface->MainWindow
     switch19 = QtCore.pyqtSignal(dict)
     switch20 = QtCore.pyqtSignal(dict)
+    switch21 = QtCore.pyqtSignal(dict)  # edit usr information:accountManage->taskInterface
+    switch22 = QtCore.pyqtSignal()  # edit usr information:taskInterface->MainWindow
     def __init__(self, user_id):
         super(TaskInterface, self).__init__()
         self.user_id = user_id
@@ -47,6 +49,7 @@ class TaskInterface(QWidget):
 
         self.switch1.connect(self.editTask)
         self.switch3.connect(self.deleteTask)
+        self.switch3_.connect(self.deleteTaskFromDate)
         self.switch5.connect(self.goThatDayTask)
         self.switch7.connect(self.searchInTaskManage)
         self.switch9.connect(self.searchInEverydayTask)
@@ -63,7 +66,6 @@ class TaskInterface(QWidget):
 
     def deleteTask(self, task_name):
         # 后端处理
-        print("now delete:" + task_name)
         base_op.del_task(task_name=task_name)
         base_op.re_arrange()
         # 以下勿删
@@ -146,6 +148,13 @@ class TaskInterface(QWidget):
     def updateDataAnalysis(self, chart_dict):
         print(chart_dict)
         self.switch20.emit(chart_dict)
+
+    def editUsrInformation(self, usr_dict):
+        base_op.update_profile(profile_dict=usr_dict)
+        self.switch22.emit()
+
+    def getUsrInfo(self):
+        return base_op.get_profile()
 
 
 

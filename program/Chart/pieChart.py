@@ -48,6 +48,8 @@ class ChartView(QMainWindow):
         font = QFont('微软雅黑', 8)
         if dict_keyname == 'taskTypeList':
             count = 0
+            if count == 0:
+                count = 1
             for i in chart_list:
                 count += i[1]
             for i in chart_list:
@@ -56,6 +58,8 @@ class ChartView(QMainWindow):
                 pieSlice.setLabelFont(font)
         elif dict_keyname == 'taskStatusList':
             count = chart_list[0][1] + chart_list[1][1] + chart_list[2][1] + chart_list[3][1]
+            if count == 0:
+                count = 1
             pieSeries.append(self.nameDict[dict_keyname][0] + "%d%%" % (chart_list[0][1] / count * 100),
                              chart_list[0][1])
             pieSeries.append(self.nameDict[dict_keyname][1] + "%d%%" % (chart_list[1][1] / count * 100),
@@ -70,7 +74,8 @@ class ChartView(QMainWindow):
                              chart_list[3][1])
         elif dict_keyname == 'taskImportanceList':
             count = chart_list[0][1] + chart_list[1][1] + chart_list[2][1] + chart_list[3][1]
-            print(count)
+            if count == 0:
+                count = 1
             pieSeries.append(self.nameDict[dict_keyname][0] + "%d%%" % (chart_list[0][1] / count * 100),
                              chart_list[0][1])
             pieSeries.append(self.nameDict[dict_keyname][1] + "%d%%" % (chart_list[1][1] / count * 100),
@@ -84,6 +89,8 @@ class ChartView(QMainWindow):
             pieSlice.setColor(QColor(255, 80, 80))
         elif dict_keyname == 'taskFinishmentList':
             count = chart_list[0][1] + chart_list[1][1]
+            if count == 0:
+                count = 1
             pieSlice = pieSeries.append(self.nameDict[dict_keyname][0] + "%d%%" % (chart_list[0][1] / count * 100),
                              chart_list[0][1])
             pieSlice.setLabelVisible(True)
@@ -100,7 +107,8 @@ if __name__ == '__main__':
     window = ChartView()
     # window.initChart('taskImportanceList', [(0, 4), (1, 5), (2, 6), (3, 3)])
     # window.initChart('taskTypeList', [("学习", 4), ("运动", 5), ("娱乐", 6), ("工作", 3), ("其他", 4)])
-    window.initChart('taskStatusList', [(0, 4), (1, 5), (2, 6), (3, 3)])
+    #window.initChart('taskStatusList', [(0, 4), (1, 5), (2, 6), (3, 3)])
+    window.initChart('taskStatusList', [(0, 0), (1, 0), (2, 0), (3, 0)])
     # window.initChart('taskFinishmentList', [(0, 4), (1, 5)])
 
 

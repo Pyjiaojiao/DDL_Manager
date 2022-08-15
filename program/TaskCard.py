@@ -210,8 +210,8 @@ class myTaskCard(QtWidgets.QWidget):
             self.taskDict = task_dict
             self.label_4.setText(self.taskDict['name'])
             self.label_6.setText(self.taskDict['endDate'].toString(QtCore.Qt.DefaultLocaleShortDate))
-            print('status is ')
-            print(self.taskDict['status'])
+            # print('status is ')
+            # print(self.taskDict['status'])
             if self.taskDict['status'] > 1:
                 self.checkBox.setEnabled(False)
                 self.checkBox.setText("已完成")

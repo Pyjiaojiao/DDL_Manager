@@ -9,6 +9,7 @@ from PyQt5.QtCore import Qt, QSize, QDateTime
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QListWidget, QStackedWidget, QHBoxLayout, \
     QListWidgetItem, QLabel, QApplication
+
 # from CalendarWidget import CalendarWidget
 # from EverydayTaskWindow import EveryDayTaskWindow
 # from TaskManagementWindow import TaskManagementWindow
@@ -31,6 +32,7 @@ from TaskManagementWindow import TaskManagementWindow
 from EverydayTaskWindow import EveryDayTaskWindow
 from AccountManageWindow import AccountManageWindow
 from CalendarWidget import CalendarWidget
+from TaskInterface import taskInterface
 
 
 class LeftTabWidget(QWidget):
@@ -51,17 +53,18 @@ class LeftTabWidget(QWidget):
         # 左侧列表参数设置
         self.listWidget = QListWidget(self)
         self.listWidget.setGeometry(0, 0, 220, 720)
-        #self.listWidget.setFixedSize(220, 720)
+        # self.listWidget.setFixedSize(220, 720)
         self.listWidget.setStyleSheet("background-color: rgb(220, 220, 220);\n"
-"color: rgb(85, 85, 85)")
+                                      "color: rgb(85, 85, 85)")
         # layout.addWidget(self.listWidget)
         # 右侧层叠窗口
         # 右侧列表参数设置
         self.stackedWidget = QStackedWidget(self)
         self.stackedWidget.setGeometry(220, 0, 1060, 720)
-        #self.stackedWidget.setFixedSize(1060, 720)
+        # self.stackedWidget.setFixedSize(1060, 720)
         self.stackedWidget.setStyleSheet("background-color: rgb(255, 255, 255);")
         # layout.addWidget(self.stackedWidget)
+        self.listWidget.currentRowChanged.connect(self.changeList)
         self.initUi()
 
     def initUi(self):
@@ -95,7 +98,7 @@ class LeftTabWidget(QWidget):
         leftBottomItem_1.setSizeHint(QSize(30, 30))
         leftBottomItem_1.setBackground(Qt.white)
         '''
-        #self.listWidget
+        # self.listWidget
         # 右侧的页面
         # Page1：每日任务
         gridLayoutWidget_1 = QtWidgets.QWidget()
@@ -121,8 +124,6 @@ class LeftTabWidget(QWidget):
         gridLayoutWidget_2.raise_()
         gridLayoutWidget_2.setLayout(gridLayOut_2)
         self.stackedWidget.addWidget(gridLayoutWidget_2)
-
-
 
         # Page3：日历系统
         gridLayoutWidget_3 = QtWidgets.QWidget()
@@ -155,6 +156,10 @@ class LeftTabWidget(QWidget):
 
         self.setStyleSheet(Stylesheet)
 
+    def changeList(self, p_int):
+        if p_int == 4:
+            self.accountManageWidget.\
+                BasicInformationWidget.updateInformation(taskInterface.getUsrInfo())
 
 # 样式表
 Stylesheet = """
@@ -208,4 +213,3 @@ if __name__ == "__main__":
     # 你的测试代码，比如可以静态/动态装载一些数据进去
     w.show()
     sys.exit(app.exec_())
-

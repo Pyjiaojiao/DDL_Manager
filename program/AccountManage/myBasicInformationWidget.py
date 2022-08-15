@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
+
 class BasicInformationWidget(QWidget):
     def __init__(self):
         super(BasicInformationWidget, self).__init__()
@@ -15,7 +16,7 @@ class BasicInformationWidget(QWidget):
         self.widget = QtWidgets.QWidget(self)
         self.widget.setGeometry(QtCore.QRect(0, 0, 450, 580))
         self.widget.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-                           "border-radius:25px")
+                                  "border-radius:25px")
 
         self.graphicsView = QtWidgets.QGraphicsView(self.widget)
         self.graphicsView.setGeometry(QtCore.QRect(80, 20, 100, 100))
@@ -59,14 +60,15 @@ class BasicInformationWidget(QWidget):
         font.setWeight(75)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
-        self.textBrowser = QtWidgets.QTextBrowser(self.widget)
-        self.textBrowser.setGeometry(QtCore.QRect(160, 430, 250, 120))
+        self.textEdit = QtWidgets.QTextEdit(self.widget)
+        self.textEdit.setGeometry(QtCore.QRect(160, 430, 250, 120))
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
-        self.textBrowser.setFont(font)
-        self.textBrowser.setStyleSheet("background-color: rgb(238, 238, 238);\n"
-                                       "border-radius:10px")
-        self.textBrowser.setObjectName("textBrowser")
+        self.textEdit.setFont(font)
+        self.textEdit.setStyleSheet("background-color: rgb(238, 238, 238);\n"
+                                    "border-radius:10px")
+        self.textEdit.setObjectName("textEdit")
+        # 账号
         self.label_5 = QtWidgets.QLabel(self.widget)
         self.label_5.setGeometry(QtCore.QRect(160, 140, 250, 40))
         font = QtGui.QFont()
@@ -75,9 +77,10 @@ class BasicInformationWidget(QWidget):
         self.label_5.setStyleSheet("background-color: rgb(238, 238, 238);\n"
                                    "border-radius:10px\n"
                                    "")
-        self.label_5.setText("")
+        self.label_5.setText("5")
         self.label_5.setObjectName("label_5")
-        self.label_7 = QtWidgets.QLabel(self.widget)
+        # 昵称
+        self.label_7 = QtWidgets.QLineEdit(self.widget)
         self.label_7.setGeometry(QtCore.QRect(160, 210, 250, 40))
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
@@ -85,9 +88,10 @@ class BasicInformationWidget(QWidget):
         self.label_7.setStyleSheet("background-color: rgb(238, 238, 238);\n"
                                    "border-radius:10px\n"
                                    "")
-        self.label_7.setText("")
+        self.label_7.setText("7")
         self.label_7.setObjectName("label_7")
-        self.label_8 = QtWidgets.QLabel(self.widget)
+        # 地区
+        self.label_8 = QtWidgets.QLineEdit(self.widget)
         self.label_8.setGeometry(QtCore.QRect(160, 350, 250, 40))
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
@@ -95,7 +99,7 @@ class BasicInformationWidget(QWidget):
         self.label_8.setStyleSheet("background-color: rgb(238, 238, 238);\n"
                                    "border-radius:10px\n"
                                    "")
-        self.label_8.setText("")
+        self.label_8.setText("8")
         self.label_8.setObjectName("label_8")
         self.label_6 = QtWidgets.QLabel(self.widget)
         self.label_6.setGeometry(QtCore.QRect(50, 280, 100, 30))
@@ -106,7 +110,8 @@ class BasicInformationWidget(QWidget):
         font.setWeight(75)
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
-        self.label_9 = QtWidgets.QLabel(self.widget)
+        # 性别
+        self.label_9 = QtWidgets.QLineEdit(self.widget)
         self.label_9.setGeometry(QtCore.QRect(160, 280, 250, 40))
         font = QtGui.QFont()
         font.setFamily("微软雅黑 Light")
@@ -114,7 +119,7 @@ class BasicInformationWidget(QWidget):
         self.label_9.setStyleSheet("background-color: rgb(238, 238, 238);\n"
                                    "border-radius:10px\n"
                                    "")
-        self.label_9.setText("")
+        self.label_9.setText("9")
         self.label_9.setObjectName("label_9")
 
         self.pushButton = QtWidgets.QPushButton(self.widget)
@@ -124,16 +129,23 @@ class BasicInformationWidget(QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("border:2px solid rgb(0, 0, 0);\n"
-                                      "border-radius:20px;\n"
-                                      "color: rgb(0, 0, 0);\n"
-                                      "")
+        self.pushButton.setStyleSheet("QPushButton:hover{background-color: rgb(0, 0, 0)}"
+                                      "QPushButton:hover{color: rgb(255, 255, 255)}"
+                                      "QPushButton:hover{border-radius:10px}"
+                                      "QPushButton:pressed{background-color: rgb(0, 0, 0)}"
+                                      "QPushButton:pressed{color: rgb(255, 255, 255)}"
+                                      "QPushButton:pressed{border-radius:10px}"
+                                      "QPushButton{background-color: rgb(255, 255, 255)}"
+                                      "QPushButton{color: rgb(0, 0, 0)}"
+                                      "QPushButton{border-radius:10px}"
+                                      "QPushButton{border:2px solid rgb(0, 0, 0)}")
         self.pushButton.setObjectName("pushButton")
+
+        self.pushButton.clicked.connect(self.editInformation)
 
         self.retranslateUi(self)
         self.setWindowFlag(Qt.FramelessWindowHint)
         QtCore.QMetaObject.connectSlotsByName(self)
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -144,6 +156,27 @@ class BasicInformationWidget(QWidget):
         self.label_4.setText(_translate("Form", "个性签名"))
         self.label_6.setText(_translate("Form", "性别"))
         self.pushButton.setText(_translate("Form", "编辑资料"))
+
+    def updateInformation(self, usr_id, usr_dict):
+        self.label_5.setText(usr_id)
+        self.label_7.setText(usr_dict['nickname'])
+        self.label_9.setText(usr_dict['gender'])
+        self.label_8.setText(usr_dict['region'])
+        self.textEdit.setText(usr_dict['signature'])
+        return
+
+    def editInformation(self):
+        nickname = self.label_7.text()
+        gender = self.label_9.text()
+        region = self.label_8.text()
+        signature = self.textEdit.toPlainText()
+        usr_dict = {'nickname': nickname,
+                    'gender': gender,
+                    'region': region,
+                    'signature': signature}
+        from TaskInterface import taskInterface
+        taskInterface.switch21.emit(usr_dict)
+
 
 import src.images.AccountManagement_rc
 
