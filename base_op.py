@@ -185,7 +185,8 @@ def _update_all_ongoing_tasks_status(usr_id: str):
     my_data_base.update_all_ongoing_tasks_status(usr_id=usr_id, dt_now=dt_now)
 
 
-def get_analyze_result(usr_id: str, specify: dict = {}) -> dict:
+def get_analyze_result(usr_id: str = USR_ID, specify: dict = {}) -> dict:
+    usr_id = USR_ID
     pretreatment(task_dict=specify)
     _update_all_ongoing_tasks_status(usr_id)
     return my_data_analyzer.get_analyze_result(usr_id, specify)
