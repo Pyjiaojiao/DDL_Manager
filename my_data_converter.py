@@ -113,4 +113,4 @@ def date_str2QDate(d_str: 'date_str') -> QDate:
 
 
 def date_str2date(d_str: str) -> datetime.date:
-    return datetime.strptime(d_str, "%Y-%m-%d")
+    return datetime.strptime(d_str, "%Y-%m-%d").date()

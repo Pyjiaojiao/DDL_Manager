@@ -77,7 +77,7 @@ def ret_dict_init() -> dict:
         # 'totalTaskCount': 0,
         # 'totalTaskFinishRate': 0,
         # 以下字段均针对“指定的startDate和endDate之间”
-        'curOriginTaskCount': 0,
+        'curOriginalTaskCount': 0,
         'curTaskCount': 0,
         'curTaskFinishCount': 0,
         'curTaskFinishRate': 0,
@@ -87,8 +87,10 @@ def ret_dict_init() -> dict:
         'taskImportanceList': {},
         'taskFinishmentList': {},
         'taskTimeDistributeInOneDay': {},
-        'taskFinishRateInOneDay': [],
+        'taskFinishRateInOneDay': {},
+        'taskFinishCountInOneDay': {}
     }
+    return ret
 
 
 def date_ranges_intersect(range1: tuple, range2: tuple) -> bool:
@@ -137,8 +139,8 @@ def analyze_ongoing_tasks(usr_id: str, specify: dict, ret: dict):
         index = _get_first_index_ge(HOUR_STEPS_TE, task_estimated.hour) - 1
         # index = bisect.bisect_right(HOUR_STEPS_TE, task_estimated.hour) - 1
         hour_key = HOUR_STEPS_TE[index]
-        ret['taskEstimatedList'][hour_key] = 1 \
-            if hour_key not in ret['taskEstimatedList'] else 1 + ret['taskEstimatedList'][hour_key]
+        ret['timeEstimatedList'][hour_key] = 1 \
+            if hour_key not in ret['timeEstimatedList'] else 1 + ret['timeEstimatedList'][hour_key]
         analyze_subtasks(usr_id, task_name, specify, ret)
 
 
