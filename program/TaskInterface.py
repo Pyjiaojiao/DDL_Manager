@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QWidget, QApplication
 from Tools import base_op
 from ChartInterface import chartInterface
 
+
 class TaskInterface(QWidget):
     switch1 = QtCore.pyqtSignal(dict)  # for edit: taskCard->taskInterface
     switch2 = QtCore.pyqtSignal()  # for edit: taskInterface->MainWindow
@@ -31,6 +32,7 @@ class TaskInterface(QWidget):
     switch20 = QtCore.pyqtSignal(dict)
     switch21 = QtCore.pyqtSignal(dict)  # edit usr information:accountManage->taskInterface
     switch22 = QtCore.pyqtSignal()  # edit usr information:taskInterface->MainWindow
+
     def __init__(self, user_id):
         super(TaskInterface, self).__init__()
         self.user_id = user_id
@@ -58,6 +60,7 @@ class TaskInterface(QWidget):
         self.switch15.connect(self.finishTask)
         self.switch17.connect(self.finishTaskFromDate)
         self.switch19.connect(self.updateDataAnalysis)
+        self.switch21.connect(self.editUsrInformation)
 
     def addTask(self, task_dict):
         base_op.add_task(task_dict=task_dict)
@@ -83,7 +86,7 @@ class TaskInterface(QWidget):
         # 后端处理
         base_op.re_arrange()
         # newTaskList = self.searchTask({})  # 这个搜索根据后端实现改
-        #self.switch2.emit(newTaskList)
+        # self.switch2.emit(newTaskList)
         self.switch2.emit()
 
     # 任务管理界面：完成任务
@@ -150,12 +153,13 @@ class TaskInterface(QWidget):
         self.switch20.emit(chart_dict)
 
     def editUsrInformation(self, usr_dict):
+        print(usr_dict)
         base_op.update_profile(profile_dict=usr_dict)
+
         self.switch22.emit()
 
     def getUsrInfo(self):
         return base_op.get_profile()
-
 
 
 app = QApplication(sys.argv)

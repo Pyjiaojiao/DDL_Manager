@@ -118,13 +118,11 @@ class MainWindow(QMainWindow, mainUi):
         # self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
 
     def updateDataAnalysis(self, chart_dict):
-        print("main")
-        # print(chart_dict)
         self.leftTabWidget.dataAnalysisWidget.dataPageWidget.updateDateAnalysis(chart_dict)
 
     def updateUsrInfo(self):
         self.leftTabWidget.accountManageWidget.\
-            BasicInformationWidget.updateInformation(taskInterface.getUsrInfo())
+            BasicInformationWidget.updateInformation(*taskInterface.getUsrInfo())
 
 
 class Login(QMainWindow, loginUi):

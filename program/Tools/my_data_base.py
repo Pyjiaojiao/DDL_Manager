@@ -10,6 +10,7 @@ import sqlite3
 import datetime
 import my_data_converter
 from base_op import SUBTASK_STATUS_CODE
+from itertools import zip_longest
 
 
 def db_start(usr_id: str) -> (sqlite3.Connection, sqlite3.Cursor):
@@ -174,6 +175,9 @@ def clear_scheduled_subtasks(usr_id):
             curs.execute('delete from "{table_name}" where status != "{finish_code}"'.
                          format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish']))
         else:
+            curs.execute(
+                '''create table if not exists "{table_name}"
+                (date date, start_time datetime, end_time datetime, status int)'''.format(table_name=task_name))
             curs.execute('delete from "{table_name}" where status != "{finish_code}" and status != "{time_out_code}"'
                          .format(table_name=task_name, finish_code=SUBTASK_STATUS_CODE['finish'],
                                  time_out_code=SUBTASK_STATUS_CODE['time_out']))
@@ -218,6 +222,7 @@ def get_specified_subtasks(usr_id: str, specify_str_4task: str, specify_str_4sub
             # subtasks_rcd_list.append(subtask_rcd_item)
             ret.append(task_dict)
     db_end(conn, curs)
+    ret.sort(key=lambda e: e['startTime'])  # 小任务按开始时间排序
     return ret
 
 
@@ -451,7 +456,7 @@ def usr_update_profile(usr_id: str, p_dict: dict = {}):
     curs.execute(tbl_drp)
     tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
     curs.execute(tbl_crt)
-    tbl_ins = 'insert into USR_PROFILE(?, ?, ?, ?)'
+    tbl_ins = 'insert into USR_PROFILE values(?, ?, ?, ?)'
     curs.execute(tbl_ins, [p_dict['nickname'], p_dict['gender'], p_dict['region'], p_dict['signature']])
     db_end(conn, curs)
 
@@ -461,11 +466,12 @@ def usr_get_profile(usr_id: str) -> dict:
     tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
     curs.execute(tbl_crt)
     curs.execute('select * from USR_PROFILE')
-    profile_rcd = curs.fetchall()
-    p_dict = {'nickname': profile_rcd[0],
-              'gender': profile_rcd[1],
-              'region': profile_rcd[2],
-              'signature': profile_rcd[3]}
+    profile_rcd = curs.fetchone()
+    keys = ['nickname', 'gender', 'region', 'signature']
+    if not profile_rcd:
+        p_dict = dict(zip_longest(keys, []))
+    else:
+        p_dict = dict(zip(keys, profile_rcd))
     return p_dict
 
 

@@ -159,7 +159,7 @@ class LeftTabWidget(QWidget):
     def changeList(self, p_int):
         if p_int == 4:
             self.accountManageWidget.\
-                BasicInformationWidget.updateInformation(taskInterface.getUsrInfo())
+                BasicInformationWidget.updateInformation(*taskInterface.getUsrInfo())
 
 # 样式表
 Stylesheet = """
