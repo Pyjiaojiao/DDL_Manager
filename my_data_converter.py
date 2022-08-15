@@ -66,6 +66,7 @@ def subtask_record_and_task_dict2subtask_dict(rcd, task_dict) -> dict:
     task_dict['date'] = date_str2QDate(rcd[0])
     task_dict['startTime'] = datetime_str2QDateTime(rcd[1])
     task_dict['endTime'] = datetime_str2QDateTime(rcd[2])
+    task_dict['status'] = int(rcd[3])
     return task_dict
 
 

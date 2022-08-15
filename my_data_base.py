@@ -445,6 +445,15 @@ def usr_update_password(usr_id: str, encrypted_password: str):
     db_end(conn, curs)
 
 
+def usr_update_profile(usr_id: str, profile_dict: dict = {}):
+    conn, curs = db_start(usr_id)
+    tbl_drp = 'drop table if exists USR_PROFILE'
+    curs.execute(tbl_drp)
+    tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
+
+
+
+
 def usr_register(usr_id: str, encrypted_password: str):
     _init_db(usr_id)
     usr_update_password(usr_id, encrypted_password)
