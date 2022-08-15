@@ -151,10 +151,10 @@ def update_profile(usr_id: str = USR_ID, profile_dict: dict = {}):
     my_data_base.usr_update_profile(usr_id, profile_dict)
 
 
-# 查询用户个人资料。返回值为字典，包含update_profile接口中提到的键。可能有值为空。
-def get_profile(usr_id: str = USR_ID) -> dict:
+# 查询用户个人资料。返回值为(usr_id, 字典)。字典包含update_profile接口中提到的键。可能有值为空。
+def get_profile(usr_id: str = USR_ID) -> tuple:
     usr_id = USR_ID
-    return my_data_base.usr_get_profile(usr_id)
+    return usr_id, my_data_base.usr_get_profile(usr_id)
 
 
 # 从db恢复已保存的全部子任务，返回列表，按date, start_time排序

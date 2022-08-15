@@ -10,6 +10,7 @@ import sqlite3
 import datetime
 import my_data_converter
 from base_op import SUBTASK_STATUS_CODE
+from itertools import zip_longest
 
 
 def db_start(usr_id: str) -> (sqlite3.Connection, sqlite3.Cursor):
@@ -462,11 +463,12 @@ def usr_get_profile(usr_id: str) -> dict:
     tbl_crt = 'create table if not exists USR_PROFILE(nickname text, gender text, region text, signature text)'
     curs.execute(tbl_crt)
     curs.execute('select * from USR_PROFILE')
-    profile_rcd = curs.fetchall()
-    p_dict = {'nickname': profile_rcd[0],
-              'gender': profile_rcd[1],
-              'region': profile_rcd[2],
-              'signature': profile_rcd[3]}
+    profile_rcd = curs.fetchone()
+    keys = ['nickname', 'gender', 'region', 'signature']
+    if not profile_rcd:
+        p_dict = dict(zip_longest(keys, []))
+    else:
+        p_dict = dict(zip(keys, profile_rcd))
     return p_dict
 
 
