@@ -138,8 +138,9 @@ class DataPageWidget(QtWidgets.QWidget):
         return
 
     def updateDateAnalysis(self, chart_dict):
+        print(chart_dict)
         self.page1.updateThreeCount(chart_dict['curTaskCount'],
-                                    chart_dict['curFinishTaskCount'], chart_dict['curTaskFinishRate'])
+                                    chart_dict['curTaskFinishCount'], chart_dict['curTaskFinishRate'])
         self.page1.updateStatusPieChart(chart_dict['taskStatusList'])
         self.page1.updateTypePieChart(chart_dict['taskTypeList'])
         self.page2.updateImportanceBarChart(chart_dict['taskImportanceList'])
@@ -201,7 +202,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = DataPageWidget()
     w.show()
-    chart_dict = {
+    chart_dict2 = {
         'startDate': QDate(1970, 1, 1),  # QDateTime
         'endDate': QDate(2050, 1, 1),  # QDateTime 指定查询的开始和截止日期（只考虑日期，不计小时分钟）
         # 以下字段均针对“所有时间”
@@ -245,7 +246,7 @@ if __name__ == "__main__":
         'taskFinishRateInOneDay': [(3, 0.8), (6, .3), (9, .62), (12, .4), (15, .5), (18, .7), (21, .8), (24, .3)]
 
     }
-    w.updateDateAnalysis(chart_dict)
-    w.updateDateAnalysis(chart_dict1)
+    #w.updateDateAnalysis(chart_dict)
+    #w.updateDateAnalysis(chart_dict1)
     sys.exit(app.exec_())
 

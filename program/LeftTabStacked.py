@@ -140,7 +140,7 @@ class LeftTabWidget(QWidget):
         gridLayOut_4 = QtWidgets.QGridLayout(gridLayoutWidget_4)
         gridLayOut_4.setContentsMargins(0, 0, 0, 0)
         self.dataAnalysisWidget.setObjectName("dataAnalysis")
-        self.dataAnalysisWidget.test()
+        # self.dataAnalysisWidget.test()
         gridLayOut_4.addWidget(self.dataAnalysisWidget)
         self.stackedWidget.addWidget(gridLayoutWidget_4)
 

@@ -87,8 +87,10 @@ def ret_dict_init() -> dict:
         'taskImportanceList': {},
         'taskFinishmentList': {},
         'taskTimeDistributeInOneDay': {},
-        'taskFinishRateInOneDay': [],
+        'taskFinishRateInOneDay': {},
+        'taskFinishCountInOneDay':{}
     }
+    return ret
 
 
 def date_ranges_intersect(range1: tuple, range2: tuple) -> bool:
@@ -117,7 +119,7 @@ def analyze_ongoing_tasks(usr_id: str, specify: dict, ret: dict):
         # 任务起止日期与传入起止日期比较, 不相交的直接跳过
         if not date_ranges_intersect((task_start_date, task_end_date), (specify['start_date'], specify['end_date'])):
             continue
-        ret['curOriginalTaskCount'] += 1
+        ret['curOriginTaskCount'] += 1
         task_type = rcd[7]
         ret['taskTypeList'][task_type] = 1 \
             if task_type not in ret['taskTypeList'] else 1 + ret['taskTypeList'][task_type]
@@ -137,8 +139,8 @@ def analyze_ongoing_tasks(usr_id: str, specify: dict, ret: dict):
         index = _get_first_index_ge(HOUR_STEPS_TE, task_estimated.hour) - 1
         # index = bisect.bisect_right(HOUR_STEPS_TE, task_estimated.hour) - 1
         hour_key = HOUR_STEPS_TE[index]
-        ret['taskEstimatedList'][hour_key] = 1 \
-            if hour_key not in ret['taskEstimatedList'] else 1 + ret['taskEstimatedList'][hour_key]
+        ret['timeEstimatedList'][hour_key] = 1 \
+            if hour_key not in ret['timeEstimatedList'] else 1 + ret['timeEstimatedList'][hour_key]
         analyze_subtasks(usr_id, task_name, specify, ret)
 
 

@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import QDateTime, QTime, QDate
 from PyQt5.QtWidgets import QWidget, QApplication
 from Tools import base_op
-
+from ChartInterface import chartInterface
 
 class TaskInterface(QWidget):
     switch1 = QtCore.pyqtSignal(dict)  # for edit: taskCard->taskInterface
@@ -27,7 +27,8 @@ class TaskInterface(QWidget):
     switch16 = QtCore.pyqtSignal()  # finish task:taskInterface->MainWindow
     switch17 = QtCore.pyqtSignal(QtCore.QDate, dict)  # finish date task:everydayTask->taskInterface
     switch18 = QtCore.pyqtSignal(QtCore.QDate)  # finish date task:taskInterface->MainWindow
-
+    switch19 = QtCore.pyqtSignal(dict)
+    switch20 = QtCore.pyqtSignal(dict)
     def __init__(self, user_id):
         super(TaskInterface, self).__init__()
         self.user_id = user_id
@@ -53,6 +54,7 @@ class TaskInterface(QWidget):
         self.switch13.connect(self.loginAccount)
         self.switch15.connect(self.finishTask)
         self.switch17.connect(self.finishTaskFromDate)
+        self.switch19.connect(self.updateDataAnalysis)
 
     def addTask(self, task_dict):
         base_op.add_task(task_dict=task_dict)
@@ -140,6 +142,11 @@ class TaskInterface(QWidget):
             print("login fail")
         else:
             self.switch14.emit()
+
+    def updateDataAnalysis(self, chart_dict):
+        print(chart_dict)
+        self.switch20.emit(chart_dict)
+
 
 
 app = QApplication(sys.argv)

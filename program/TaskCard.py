@@ -188,11 +188,16 @@ class myTaskCard(QtWidgets.QWidget):
             self.frame.setVisible(False)
             self.taskDict = {}
         else:
+            print(task_dict)
             self.frame.setVisible(True)
             self.taskDict = task_dict
             self.label_4.setText(self.taskDict['name'])
             self.label_6.setText(self.taskDict['endDate'].toString(QtCore.Qt.DefaultLocaleShortDate))
+            print('status is ')
+            print(self.taskDict['status'])
             self.checkBox.setChecked(self.taskDict['status'] > 1)
+            if self.taskDict['status'] > 1:
+                self.checkBox.setEnabled(False)
             self.progressBar.setProperty("value", self.calStatusDegree())
             # if self.pageMode == 1:
             self.taskDetailWidget.updateTask(task_dict)

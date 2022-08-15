@@ -37,7 +37,8 @@ class MainWindow(QMainWindow, mainUi):
         taskInterface.switch6.connect(self.goThatDayTask)
         taskInterface.switch8.connect(self.searchInTaskManage)
         taskInterface.switch10.connect(self.searchInEverydayTask)
-        chartInterface.switch2.connect(self.updateDataAnalysis)
+        taskInterface.switch18.connect(self.finishTaskFromDate)
+        taskInterface.switch20.connect(self.updateDataAnalysis)
 
     def goLogin(self):
         self.switch2.emit()
@@ -116,6 +117,8 @@ class MainWindow(QMainWindow, mainUi):
         self.leftTabWidget.everyDayTaskWidget.searchTaskFromDate()
 
     def updateDataAnalysis(self, chart_dict):
+        print("main")
+        #print(chart_dict)
         self.leftTabWidget.dataAnalysisWidget.dataPageWidget.updateDateAnalysis(chart_dict)
 
 
@@ -141,11 +144,12 @@ class Controller:
         self.login = Login()
         self.main = None
         self.login.setWindowTitle("Login")
+        self.login.setWindowIcon(QIcon(":/loginSign.png"))
 
     def login_success(self):
         self.main = MainWindow()
-        self.main.setWindowTitle("Task Scheduler")
-        self.main.setWindowIcon(QIcon("../src/icons/EverydayTask_calendar.png"))
+        self.main.setWindowTitle("DDL Manager")
+        self.main.setWindowIcon(QIcon(":/MainPage.png"))
 
     def showLogin(self):
         taskInterface.switch14.connect(self.showMain)
@@ -165,3 +169,5 @@ if __name__ == '__main__':
     myWin = Controller()
     myWin.showLogin()
     sys.exit(app.exec_())  # 在主线程中退出
+
+import src.icons.WindowIcons_rc
