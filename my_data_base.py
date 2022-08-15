@@ -259,6 +259,8 @@ def terminate_subtask(usr_id: str, task_name: str, task_start_time: datetime, te
         task_rcd = curs.fetchone()
         task_estimated = my_data_converter.datetime_str2datetime(task_rcd[3])
         task_estimated -= task_timedelta
+        curs.execute('update ONGOING_TASKS set time_estimated = "{task_estimated}" where name = "{task_name}"'.format(
+            task_estimated=task_estimated, task_name=task_name))
         # 直接移除任务
         curs.execute('delete from "{task_name}" where start_time = "{start_time}"'.format(task_name=task_name,
                                                                                           start_time=task_start_time))
