@@ -1,12 +1,18 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QHBoxLayout, QMainWindow
 from program.AccountManage.myOutWidget import OutWidget
 from program.AccountManage.myWechatEdit import WechatWidget
 from program.AccountManage.myPhoneWidget import PhoneWidget
 from program.AccountManage.myPassportWidget import PassportWidget
 from program.AccountManage.myBasicInformationWidget import BasicInformationWidget
 from program.AccountManage.myEmailWidget import EmailWidget
+from AccountManage.ModifyPasswordWindow import Ui_MainWindow as mod
+
+class modifyPasswordWindow(QMainWindow, mod):
+    def __init__(self):
+        super(modifyPasswordWindow, self).__init__()
+        self.setupUi(self)
 
 class AccountManageWindow(QWidget) :
     def __init__(self, *args, **kwargs):
@@ -30,6 +36,8 @@ class AccountManageWindow(QWidget) :
 
         self.baseLayout = QtWidgets.QGridLayout(self, spacing=0)
         self.baseLayout.setContentsMargins(50, 50, 50, 50)
+
+        self.modWindow = modifyPasswordWindow()
 
         self.setupUi()
 
@@ -66,6 +74,8 @@ class AccountManageWindow(QWidget) :
 
         self.baseLayout.addWidget(self.layout2_widget, 0, 1)
 
+        self.PassportWidget.pushButton_2.connect(self.modWindowShow)
+
         self.retranslateUi()
 
         # QtCore.QMetaObject.connectSlotsByName(self)
@@ -73,6 +83,8 @@ class AccountManageWindow(QWidget) :
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
 
+    def modWindowShow(self):
+        self.modWindow.show()
 import src.images.AccountManagement_rc
 
 if __name__ == "__main__":

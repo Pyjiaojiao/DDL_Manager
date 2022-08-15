@@ -212,12 +212,18 @@ class myTaskCard(QtWidgets.QWidget):
             self.label_6.setText(self.taskDict['endDate'].toString(QtCore.Qt.DefaultLocaleShortDate))
             # print('status is ')
             # print(self.taskDict['status'])
-            if self.taskDict['status'] > 1:
+            if self.taskDict['status'] == 2:
                 self.checkBox.setEnabled(False)
                 self.checkBox.setText("已完成")
                 self.checkBox.setStyleSheet("QPushButton{color: rgb(47, 75, 51)}"
                                             "QPushButton{border-radius:10px}"
                                             "QPushButton{border:2px solid rgba(47, 75, 51)}")
+            elif self.taskDict['status'] == 3:
+                self.checkBox.setEnabled(False)
+                self.checkBox.setText("已过期")
+                self.checkBox.setStyleSheet("QPushButton{color: rgb(237,162,0)}"
+                                            "QPushButton{border-radius:10px}"
+                                            "QPushButton{border:2px solid rgba(237, 162, 0)}")
             self.progressBar.setProperty("value", self.calStatusDegree())
             # if self.pageMode == 1:
             self.taskDetailWidget.updateTask(task_dict)
