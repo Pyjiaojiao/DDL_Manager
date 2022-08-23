@@ -111,8 +111,11 @@ def _init(usr_id=None):
 def select_a_day(day_from, day_to):
     day_from_index = bisect.bisect_left(AVAILABLE_TIMETABLE, day_from)
     day_to_index = bisect.bisect_right(AVAILABLE_TIMETABLE, day_to, lo=day_from_index)
+    day_to_index = max(day_to_index - 1, 0)
+    day_from_index = min(day_to_index, day_from_index)  # 理论上，day_from_index应该大，但时间不足的情况下可能出现小1的情况
     # print("day_from_index", day_from_index, "day_to_index", day_to_index)
-    rand_day_key = random.randint(day_from_index, max(day_to_index - 1, 0))
+    # rand_day_key = random.randint(day_from_index, max(day_to_index - 1, 0))
+    rand_day_key = random.randint(day_from_index, day_to_index)
     return AVAILABLE_TIMETABLE[rand_day_key]
 
 
@@ -130,13 +133,19 @@ def task_part_fill(time_table, task, selected_day_key=None):
     # 选择一个可用天
     if selected_day_key is None:
         # print("*******", DAY_FROM, task.start_date, DAY_END, task.ddl)
+        a, b = datetime_max(DAY_FROM, task.start_date), datetime_min(DAY_END, task.ddl)
+        print("task name is ", task.name)
+        print("date_range is ", a, b)
         selected_day_key = select_a_day(datetime_max(DAY_FROM, task.start_date), datetime_min(DAY_END, task.ddl))
+        print("selected_day_key is ", selected_day_key)
     selected_day = TIMETABLE[selected_day_key]
     # 求应安排时间
     # print(selected_day.available_time, type(selected_day.available_time), "type selected_day.available_time")
     part_time = min(MAX_CONTINUOUS_WORKING_TIME, task.remaining_time.time())  # 这次安排部分 的时间
     # print("type part_time", type(part_time), part_time)
     part_time = min(part_time, selected_day.available_time)
+    print("selected_day_key: ", selected_day_key)
+    print("part_time: ", part_time, "selected_day.available_time: ", selected_day.available_time)
     # 调试用。只要其他地方没问题，这里也不会有问题。
     # global cnt
     # print("cnt: %d" % cnt)
@@ -151,7 +160,7 @@ def task_part_fill(time_table, task, selected_day_key=None):
     selected_day.add_task(task_part)
     # 更新任务未安排时间
     task.remaining_time = Day.datetime_sub_time(task.remaining_time, part_time)
-    selected_day.available_time = Day.time_sub(selected_day.available_time, part_time)
+    # selected_day.available_time = Day.time_sub(selected_day.available_time, part_time)
     # 从“可用天key列表”中移除不再可用的天
     if selected_day.available_time == Day.TIME_ZERO.time():
         AVAILABLE_TIMETABLE.remove(selected_day_key)

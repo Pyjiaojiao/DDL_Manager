@@ -20,7 +20,7 @@ HOUR_STEPS_DS = [x for x in range(0, 24, HOUR_STEP_DS)]  # subtask distribute ho
 
 # 提供给base_op的接口，供base_op构造好检索表达式后获取分析结果
 def get_analyze_result(usr_id: str, specify: dict) -> dict:
-    ret_dict = ret_dict_init()  # 放前端需要的返回值
+    ret_dict = ret_dict_init(specify)  # 放前端需要的返回值
     analyze_ongoing_tasks(usr_id, specify, ret_dict)
     ret_dict_reorganize(ret_dict)
     return ret_dict
@@ -68,7 +68,7 @@ def ret_dict_reorganize(ret: dict):
 
 
 # 改: 凡列表含元组的，统统改成列表含字典。元组操作真的反人类。字典转元组放最后，转完记得排序。
-def ret_dict_init() -> dict:
+def ret_dict_init(specify: dict) -> dict:
     ret = {
         'startDate': QDate(1970, 1, 1),  # QDateTime
         'endDate': QDate(2050, 1, 1),  # QDateTime 指定查询的开始和截止日期（只考虑日期，不计小时分钟）
@@ -95,8 +95,10 @@ def ret_dict_init() -> dict:
 
 def date_ranges_intersect(range1: tuple, range2: tuple) -> bool:
     # 整理range1, range2，使之按start_date升序排列
+    # print("range1", range1, "range2", range2)
     range1, range2 = sorted([range1, range2], key=lambda e: e[0])
     # 如果start_date晚的range的start_date晚于早的end_date，应返回不相交False
+    # print("range2[0]", range2[0], "range1[1]", range1[1], "range2[0]>range1[1]", range2[0] > range1[1])
     if range2[0] > range1[1]:
         return False
     return True
@@ -131,12 +133,14 @@ def analyze_ongoing_tasks(usr_id: str, specify: dict, ret: dict):
             if task_importance not in ret['taskImportanceList'] else 1 + ret['taskImportanceList'][task_importance]
         if task_status == TASK_STATUS_CODE['finish']:
             ret['taskFinishmentList'][True] = 1 if True not in ret['taskFinishmentList'] else 1 + ret[
-                'taskFinishmentList']
+                'taskFinishmentList'][True]
         elif task_status == TASK_STATUS_CODE['time_out']:
             ret['taskFinishmentList'][False] = 1 if False not in ret['taskFinishmentList'] else 1 + ret[
-                'taskFinishmentList']
+                'taskFinishmentList'][False]
         task_estimated = my_data_converter.datetime_str2datetime(rcd[3])
-        index = _get_first_index_ge(HOUR_STEPS_TE, task_estimated.hour) - 1
+        print("task_estimated_hour ", task_estimated.hour, "task_estimated ", task_estimated)
+        index = _get_first_index_ge(HOUR_STEPS_TE, task_estimated.hour)
+        print("index ", index)
         # index = bisect.bisect_right(HOUR_STEPS_TE, task_estimated.hour) - 1
         hour_key = HOUR_STEPS_TE[index]
         ret['timeEstimatedList'][hour_key] = 1 \
